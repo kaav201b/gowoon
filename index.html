@@ -58,7 +58,12 @@ h2{font-size:20px;margin:0;text-wrap:balance}
 .bus-no{font-family:var(--display);font-size:22px;color:#fff;background:#2f7de1;border-radius:10px;text-align:center;padding:4px 0;font-variant-numeric:tabular-nums}
 .bus-t b{font-size:15px}
 .bus-times{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 2px}
-.bus-times span{font-size:13px;font-variant-numeric:tabular-nums;background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:1px 7px;font-weight:700}
+.bus-times span{font-size:13px;font-variant-numeric:tabular-nums;background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:1px 7px;font-weight:700;display:inline-flex;align-items:baseline;gap:4px}
+.bus-times span.past{opacity:.35;text-decoration:line-through;font-weight:400}
+.bus-times span.next{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.bus-times span.best{background:var(--hot);color:#fff;font-size:15px;padding:2px 9px}
+.bus-t .est{color:#e03131;font-size:13px;font-weight:700;margin-left:2px}
+.bus-times em{font-style:normal;font-size:11px;font-weight:700}
 .bus-t{font-size:14px;font-variant-numeric:tabular-nums}
 .bus-t small{display:block;font-size:12px;color:var(--muted)}
 .bus-btn{display:block;margin-top:12px;text-align:center;padding:11px;border-radius:12px;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;font-size:14px}
@@ -210,7 +215,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -233,7 +238,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -248,6 +253,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -260,6 +266,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -276,7 +283,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -486,10 +493,14 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-15",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
-  "gaps": {}
+  "gaps": {
+   "202": 15,
+   "221": 15
+  },
+  "gapLabel": "10~15"
  }
 };
 /* ===== DATA END ===== */
@@ -549,24 +560,39 @@ const QUOTES=[["천 리 길도 한 걸음부터", "속담"], ["시작이 반이�
 
 // 등교 버스
 const STOP_MIN=1.5; // 정류장 한 칸당 예상 이동 시간(분) — 실제와 다를 수 있음
-(function(){
+function renderBus(){
   const b=DATA.bus; if(!b){$("sec-bus").hidden=true;return;}
   $("busPath").innerHTML=`<b>${esc(b.from)}</b><span>${esc(b.dir)}</span><span class="arr">→</span><b>${esc(b.to)}</b>`;
-  $("busList").innerHTML=b.routes.map(r=>{
+  const n=new Date(), nowM=n.getHours()*60+n.getMinutes()+n.getSeconds()/60, schoolDay=n.getDay()>=1&&n.getDay()<=5;
+  const toM=x=>{const [h,m]=String(x||"").split(":").map(Number);return isNaN(h)?null:h*60+m;};
+  const fmt=x=>`${Math.floor(x/60)}:${String(x%60).padStart(2,"0")}`;
+  const rows=b.routes.map(r=>{
+    const g=+r.gap||+((b.gaps||{})[r.no]||0), f=toM(r.first), l=toM(r.last), off=Math.round((r.order||0)*STOP_MIN), times=[];
+    if(r.ok&&g>0&&f!=null){for(let x=f+off;x<=(l??1440)+off;x+=g){if(x>=440&&x<=510)times.push(x);}}
+    return {r,g,times};
+  });
+  // 전체에서 가장 먼저 오는 버스
+  let best=null;
+  if(schoolDay)rows.forEach(o=>o.times.forEach(x=>{if(x>=nowM&&(best==null||x<best.x))best={x,no:o.r.no};}));
+  $("busList").innerHTML=rows.map(({r,g,times})=>{
     let t;
-    if(r.ok===undefined) t='<small>노선 정보는 일요일 갱신 후 표시돼</small>';
+    if(r.ok===undefined) t='<small>노선 정보는 갱신 후 표시돼</small>';
     else if(!r.ok) t='<small>이 구간을 지나는 노선 정보를 못 찾았어</small>';
+    else if(!(g>0)) t=`<b>첫차 ${r.first||"-"} · 막차 ${r.last||"-"}</b><small>기점 출발 기준</small>`;
     else{
-      const g=+r.gap||+((b.gaps||{})[r.no]||0), toM=x=>{const [h,m]=String(x||"").split(":").map(Number);return isNaN(h)?null:h*60+m;};
-      const f=toM(r.first), l=toM(r.last), off=Math.round((r.order||0)*STOP_MIN);
-      const times=[];
-      if(g>0&&f!=null){for(let x=f+off;x<=(l??1440)+off;x+=g){if(x>=440&&x<=510)times.push(`${Math.floor(x/60)}:${String(x%60).padStart(2,"0")}`);}}
-      t=g>0?`<b>7:20~8:30 사이 ${times.length}대</b>${times.length?`<div class="bus-times">${times.map(x=>`<span>${x}</span>`).join("")}</div>`:""}<small>예상 시각 · 평일 약 ${g}분 간격</small>`
-           :`<b>첫차 ${r.first||"-"} · 막차 ${r.last||"-"}</b><small>기점 출발 기준</small>`;}
+      const next=schoolDay?times.find(x=>x>=nowM):undefined;
+      const chips=times.map(x=>{
+        const past=schoolDay&&x<nowM, isBest=best&&best.no===r.no&&best.x===x, isNext=x===next;
+        const left=Math.max(0,Math.ceil(x-nowM));
+        return `<span class="${past?"past":""}${isBest?" best":isNext?" next":""}">${fmt(x)}${isNext?`<em>${left?left+"분 후":"곧 도착"}</em>`:""}</span>`;}).join("");
+      const head=schoolDay&&times.length&&!next?"오늘 등교 시간대 버스는 끝났어":`7:20~8:30 사이 ${times.length}대`;
+      t=`<b>${head} <span class="est">예상 시간</span></b><div class="bus-times">${chips}</div>`;
+    }
     return `<div class="bus-row"><div class="bus-no">${esc(r.no)}</div><div class="bus-t">${t}</div></div>`;}).join("");
   const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   $("busLink").href=(isMobile&&b.mlink)||b.link||("https://map.kakao.com/link/search/"+encodeURIComponent(b.from));
-})();
+}
+renderBus(); setInterval(renderBus,30000);
 
 // 일정
 (function(){
