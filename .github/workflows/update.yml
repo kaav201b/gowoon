@@ -19,6 +19,7 @@ jobs:
       - name: 나이스 데이터로 페이지 갱신
         env:
           NEIS_KEY: ${{ secrets.NEIS_KEY }}
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
         run: python update.py
       - name: 바뀐 내용 저장
         run: |
