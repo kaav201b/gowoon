@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>고운고 1학년 학교생활</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* layout: 폰 앱처럼 한 열 카드 + 하단 탭바, 과목마다 고유 색 */
+:root{
+  --bg:#eef1ef; --surface:#ffffff; --ink:#18201d; --muted:#66706b; --line:#e2e7e4;
+  --accent:#0e8f7e; --accent-soft:#dff3ef; --hot:#ec5b38; --hot-soft:#fde9e3;
+  --cellS:62%; --cellL:92%; --cellInk:#1c2420;
+  --shadow:0 1px 2px rgba(20,40,32,.06),0 6px 20px rgba(20,40,32,.06);
+  --display:"Do Hyeon","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1413; --surface:#182120; --ink:#e7eeeb; --muted:#93a19b; --line:#26302e;
+  --accent:#3fd0b8; --accent-soft:#163430; --hot:#ff7a59; --hot-soft:#3a211b;
+  --cellS:28%; --cellL:22%; --cellInk:#e7eeeb; --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1413; --surface:#182120; --ink:#e7eeeb; --muted:#93a19b; --line:#26302e;
+  --accent:#3fd0b8; --accent-soft:#163430; --hot:#ff7a59; --hot-soft:#3a211b;
+  --cellS:28%; --cellL:22%; --cellInk:#e7eeeb; --shadow:none; color-scheme:dark}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
+body{padding:env(safe-area-inset-top,0) 0 calc(76px + env(safe-area-inset-bottom,0))}
+.wrap{max-width:480px;margin:0 auto;padding:0 16px 16px;display:flex;flex-direction:column;gap:14px}
+h1,h2,.num{font-family:var(--display);font-weight:400;letter-spacing:.01em}
+h2{font-size:20px;margin:0;text-wrap:balance}
+
+/* 상단 */
+.top{display:flex;align-items:center;justify-content:space-between;padding-top:18px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:38px;height:38px;border-radius:12px;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--display);font-size:18px}
+.brand h1{font-size:22px;margin:0;line-height:1.1}
+.brand small{display:block;font-size:12px;color:var(--muted);font-family:var(--body)}
+.pill{font-size:12px;color:var(--accent);background:var(--accent-soft);padding:5px 10px;border-radius:99px;font-weight:500;white-space:nowrap}
+
+/* 오늘 카드 */
+.hero{background:var(--accent);color:#fff;border-radius:22px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.hero .hi{font-family:var(--display);font-size:24px;line-height:1.25;text-wrap:balance}
+.hero .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:rgba(255,255,255,.16);border-radius:14px;padding:10px 10px 8px}
+.stat .num{font-size:24px;line-height:1}
+.stat span{display:block;font-size:12px;opacity:.9;margin-top:4px}
+.hero .lunch{font-size:13px;background:rgba(0,0,0,.12);border-radius:12px;padding:8px 12px}
+.hero .lunch b{font-weight:700}
+
+/* 공통 카드 */
+.card{background:var(--surface);border-radius:20px;padding:16px;box-shadow:var(--shadow);scroll-margin-top:12px}
+.card-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px}
+.card-h span{font-size:12px;color:var(--muted)}
+
+/* 일정 */
+.ev{display:flex;flex-direction:column;gap:10px}
+.ev-row{display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:start}
+.dd{border-radius:14px;background:var(--accent-soft);color:var(--accent);text-align:center;padding:8px 0 6px}
+.dd .num{font-size:22px;line-height:1;display:block;font-variant-numeric:tabular-nums}
+.dd small{font-size:11px}
+.dd.soon{background:var(--hot-soft);color:var(--hot)}
+.ev-row b{display:block;font-size:15px}
+.ev-row p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+
+/* 시간표 */
+.tt{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;margin:-4px}
+.tt th{font-size:12px;font-weight:500;color:var(--muted);padding:2px 0 4px}
+.tt th.pc{width:18px}
+.tt th.today{color:var(--accent);font-weight:700}
+.tt th.today .num{background:var(--accent);color:#fff;border-radius:8px;padding:0 6px}
+.tt th .num{font-size:16px;color:var(--ink);display:inline-block}
+.tt td{height:46px;border-radius:10px;font-size:12px;line-height:1.25;text-align:center;padding:4px 2px;word-break:keep-all;position:relative;
+  background:hsl(var(--h) var(--cellS) var(--cellL));color:var(--cellInk)}
+.tt td.empty{background:transparent;border:1px dashed var(--line)}
+.tt td.off{background:var(--bg);color:var(--muted)}
+.tt td.pa::after{content:"";position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--hot);box-shadow:0 0 0 2px var(--surface)}
+.tt .pnum{font-size:11px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:10px}
+.legend i{width:8px;height:8px;border-radius:50%;background:var(--hot)}
+
+/* 급식 */
+.strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.mday{flex:0 0 31%;min-width:108px;max-width:140px;scroll-snap-align:start;border-radius:14px;padding:10px;border:1px solid var(--line)}
+.mday.today{border-color:var(--accent);background:var(--accent-soft)}
+.mday h3{margin:0 0 6px;font-family:var(--display);font-weight:400;font-size:17px;display:flex;align-items:baseline;gap:4px}
+.mday h3 small{font-family:var(--body);font-size:11px;color:var(--muted)}
+.meal+.meal{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.mh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.mh b{font-size:12px;color:var(--accent)}
+.mh span{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.meal ul{margin:0;padding:0;list-style:none}
+.meal li{font-size:13px;line-height:1.45;overflow-wrap:anywhere}
+.meal li:first-child{font-weight:700}
+.nomeal{font-size:13px;color:var(--muted)}
+
+/* 수행 */
+.pa-list{display:flex;flex-direction:column;gap:10px}
+.pa-item{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding:12px;border-radius:16px;border:1px solid var(--line)}
+.pa-item.done{opacity:.55}
+.pa-item.done .pa-name{text-decoration:line-through}
+.chk{appearance:none;width:24px;height:24px;margin:2px 0 0;border-radius:8px;border:2px solid var(--line);cursor:pointer;display:grid;place-items:center;background:var(--surface)}
+.chk:checked{background:var(--accent);border-color:var(--accent)}
+.chk:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.chk:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pa-sub{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:hsl(var(--h) 65% 55%)}
+.pa-name{font-weight:700;font-size:15px;margin:1px 0 6px}
+.tip{font-size:13px;background:var(--hot-soft);color:var(--ink);border-radius:10px;padding:7px 10px;display:flex;gap:6px}
+.tip b{color:var(--hot);flex:none}
+
+.foot{font-size:12px;color:var(--muted);text-align:center;padding:4px 8px 8px;line-height:1.6}
+
+/* 하단 탭바 */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0))}
+.tabbar nav{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tab{border:0;background:none;font:500 11px var(--body);color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer;border-radius:10px}
+.tab svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab.on{color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">고운</div>
+      <div><h1 id="title">1학년 1반</h1><small id="upd"></small></div>
+    </div>
+    <span class="pill" id="weekPill"></span>
+  </header>
+
+  <section class="hero" id="sec-today">
+    <div class="hi" id="hi"></div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="card" id="sec-ev">
+    <div class="card-h"><h2>다가오는 일정</h2></div>
+    <div class="ev" id="ev"></div>
+  </section>
+
+  <section class="card" id="sec-tt">
+    <div class="card-h"><h2>이번 주 시간표</h2><span id="ttRange"></span></div>
+    <table class="tt" id="tt"></table>
+    <div class="legend"><i></i>수행 주간</div>
+  </section>
+
+  <section class="card" id="sec-meal">
+    <div class="card-h"><h2>오늘 뭐 먹지?</h2></div>
+    <div class="strip" id="meal"></div>
+  </section>
+
+  <section class="card" id="sec-pa">
+    <div class="card-h"><h2>이번 주 수행 체크</h2><span id="paCount"></span></div>
+    <div class="pa-list" id="pa"></div>
+  </section>
+
+</div>
+
+<div class="tabbar"><nav aria-label="바로가기">
+  <button class="tab on" data-go="sec-today"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>오늘</button>
+  <button class="tab" data-go="sec-tt"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M9 4v17M15 4v17"/></svg>시간표</button>
+  <button class="tab" data-go="sec-meal"><svg viewBox="0 0 24 24"><path d="M4 13h16a8 8 0 0 1-16 0zM8 9c0-2 2-2 2-4M12 9c0-2 2-2 2-4M16 9c0-2 2-2 2-4"/></svg>급식</button>
+  <button class="tab" data-go="sec-pa"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>수행</button>
+</nav></div>
+
+<script>
+/* ===== DATA START ===== */
+const DATA = {
+ "updated": "2026-11-15",
+ "grade": 1,
+ "cls": 1,
+ "ttPartial": false,
+ "days": {
+  "20261116": {
+   "tt": [
+    "자율·자치활동",
+    "한국사2",
+    "기술·가정",
+    "통합사회2",
+    "공통수학2",
+    "생태와 환경",
+    "통합사회2"
+   ],
+   "meal": [
+    {
+     "t": "중식",
+     "cal": "814",
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
+    },
+    {
+     "t": "석식",
+     "cal": "1162",
+     "m": "훈제오리볶음밥. (1.5.6.13.18)<br/>짬뽕수제비국. (5.6.9.13.17.18)<br/>매콤콩나물무침. (5)<br/>레몬크림새우 (1.5.6.9.13)<br/>깍두기 (9)<br/>골라먹는후식 (1.2.5.6.13)"
+    }
+   ]
+  },
+  "20261117": {
+   "tt": [
+    "공통영어2",
+    "통합사회2",
+    "기술·가정",
+    "통합과학2",
+    "과학탐구실험2",
+    "한국사2",
+    "통합과학2"
+   ],
+   "meal": [
+    {
+     "t": "중식",
+     "cal": "891",
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+    },
+    {
+     "t": "석식",
+     "cal": "1184",
+     "m": "매운어묵김밥 (1.5.6.13)<br/>잔치국수. (1.5.6.8.9.17.18)<br/>돼지갈비맛후라이드. (1.2.5.6.10.12.15)<br/>배추김치. (9)<br/>과일주스 (13)"
+    }
+   ]
+  },
+  "20261118": {
+   "tt": [
+    "공통수학2",
+    "한국사2",
+    "미술"
+   ],
+   "full": true,
+   "meal": [
+    {
+     "t": "중식",
+     "cal": "480",
+     "m": "던킨미니도넛 (1.2.5.6)<br/>과일주스 (13)<br/>대만식샌드위치(햄치즈) (1.2.5.6.10)"
+    }
+   ]
+  },
+  "20261119": {
+   "tt": [
+    "대학수학능력시험"
+   ],
+   "full": true,
+   "meal": []
+  },
+  "20261120": {
+   "tt": [
+    "공통수학2",
+    "한국사2",
+    "미술",
+    "통합과학2",
+    "생태와 환경",
+    "체육2",
+    "공통국어2"
+   ],
+   "meal": [
+    {
+     "t": "중식",
+     "cal": "847",
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+    }
+   ]
+  }
+ },
+ "events": [
+  {
+   "from": "20261116",
+   "to": "20261116",
+   "n": "시험범위·시간표 뜰 때쯤",
+   "sub": "홈페이지·교실 게시판 확인",
+   "src": "평가계획"
+  },
+  {
+   "from": "20261130",
+   "to": "20261130",
+   "n": "수행 점수 확인 & 사인",
+   "sub": "점수 이상하면 바로 말하기",
+   "src": "평가계획"
+  },
+  {
+   "from": "20261207",
+   "to": "20261211",
+   "n": "2회 정기시험",
+   "sub": "국어·수학·영어·한국사·통합사회·통합과학·기가·정보",
+   "src": "평가계획"
+  }
+ ],
+ "pa": {
+  "20261116": [
+   [
+    "공통수학2",
+    "문제 만들기 · 11월 3주~12월 1주",
+    "직접 풀어서 답이 딱 하나 나오는지 검산! 실생활 상황을 넣으면 더 좋아"
+   ],
+   [
+    "통합과학2",
+    "과학 윤리·사회적 쟁점 탐구 · 11월 3~5주",
+    "찬반 근거를 양쪽 다 정리하고, 내 입장은 과학적 근거로 마무리"
+   ],
+   [
+    "통합사회2",
+    "지속 가능한 경제 발전 탐구 보고서 · 11월 3주",
+    "실제 나라나 기업 사례 하나 골라서 통계 자료로 뒷받침하기"
+   ],
+   [
+    "정보",
+    "프로그래밍 · 11월 3~4주",
+    "제출 전에 한 번 더 실행해 보고, 주석으로 내 생각을 남겨 두기"
+   ],
+   [
+    "생태와 환경",
+    "비판적 분석 보고서·환경 캠페인 · ~11월 5주",
+    "P/F 과목이라 출석 2/3이 핵심! 캠페인은 학교에서 바로 할 수 있는 걸로"
+   ],
+   [
+    "미술",
+    "아트인퓨전(~12월) · 이모티콘 디자인(~11월)",
+    "완성작이랑 제작 과정 사진을 같이 챙겨 두면 마감 때 안 급해"
+   ]
+  ],
+  "20261123": [
+   [
+    "통합사회2",
+    "국제 분쟁 탐구 보고서 · 11월 4주",
+    "원인을 영토·자원·민족·종교로 나눠 보고 해결 방안까지 꼭 쓰기"
+   ],
+   [
+    "체육2",
+    "배드민턴 드롭 · 11월 4주",
+    "손목 힘 빼고 네트 바로 넘어 떨어지게! 쉬는 시간에 10분씩 연습"
+   ],
+   [
+    "음악",
+    "음악 감상문 · 11월 4주",
+    "좋았다로 끝내지 말고 빠르기·셈여림·악기 같은 음악 요소로 근거 대기"
+   ],
+   [
+    "공통수학2",
+    "문제 만들기 · ~12월 1주",
+    "직접 풀어서 답이 딱 하나 나오는지 검산! 실생활 상황을 넣으면 더 좋아"
+   ],
+   [
+    "통합과학2",
+    "과학 윤리·사회적 쟁점 탐구 · ~11월 5주",
+    "찬반 근거를 양쪽 다 정리하고, 내 입장은 과학적 근거로 마무리"
+   ],
+   [
+    "정보",
+    "프로그래밍 · ~11월 4주",
+    "제출 전에 한 번 더 실행해 보고, 주석으로 내 생각을 남겨 두기"
+   ],
+   [
+    "생태와 환경",
+    "보고서·캠페인 · ~11월 5주",
+    "P/F 과목이라 출석 2/3이 핵심! 캠페인은 학교에서 바로 할 수 있는 걸로"
+   ],
+   [
+    "미술",
+    "아트인퓨전 · 이모티콘 디자인(~11월 마감)",
+    "이모티콘은 이번 달이 마감이니 먼저 끝내기"
+   ]
+  ],
+  "20261130": [
+   [
+    "공통수학2",
+    "문제 만들기 · ~12월 1주 마감",
+    "이번 주가 마지막! 풀이 과정 빠진 데 없는지 확인"
+   ],
+   [
+    "통합과학2",
+    "과학 윤리·사회적 쟁점 탐구 · ~11월 5주 마감",
+    "출처 표시까지 했는지 마지막 점검"
+   ],
+   [
+    "생태와 환경",
+    "보고서·캠페인 · ~11월 5주 마감",
+    "캠페인 활동 사진이나 기록 남겨 두기"
+   ],
+   [
+    "미술",
+    "아트인퓨전 · ~12월",
+    "시험 기간 전에 최대한 진도 빼 두기"
+   ]
+  ],
+  "20261207": [
+   [
+    "미술",
+    "아트인퓨전 · ~12월",
+    "시험 끝나고 마무리! 완성작 사진 꼭 남기기"
+   ]
+  ]
+ }
+};
+/* ===== DATA END ===== */
+
+const $=id=>document.getElementById(id);
+const WD=["일","월","화","수","목","금","토"];
+const toD=s=>new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));
+const md=s=>(+s.slice(4,6))+"."+(+s.slice(6,8))+".";
+const ymd=d=>d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const keys=Object.keys(DATA.days).sort();
+const now=new Date(), todayK=ymd(now), today0=toD(todayK);
+const clean=s=>s.replace(/^\[.*?\]/,"");
+const dishes=m=>m.split(/<br\s*\/?>/).map(s=>s.replace(/\s*\([\d.\s]+\)\s*/g,"").replace(/[.\s]+$/,"").trim()).filter(Boolean);
+
+// 과목 색 (hue)
+const HUE={"공통국어2":350,"공통수학2":215,"공통영어2":265,"한국사2":28,"통합사회2":45,"통합과학2":160,"과학탐구실험2":185,
+  "체육2":120,"음악":300,"미술":330,"기술·가정":75,"정보":200,"생태와 환경":140,"진로와 직업":20,"자율·자치활동":0};
+const hue=s=>HUE[clean(s)]??0;
+const SHORT={"자율·자치활동":"자율","과학탐구실험2":"과탐실험","공통국어2":"국어","공통수학2":"수학","공통영어2":"영어","통합사회2":"통합사회","통합과학2":"통합과학","한국사2":"한국사","체육2":"체육","생태와 환경":"생태환경","기술·가정":"기가"};
+const short=s=>SHORT[clean(s)]||clean(s);
+
+const weekStart=(()=>{const d=toD(keys[0]);d.setDate(d.getDate()-((d.getDay()+6)%7));return ymd(d);})();
+const paList=DATA.pa[weekStart]||[];
+const paSet=new Set(paList.map(x=>x[0]));
+const focus=keys.find(k=>k>=todayK)||keys[keys.length-1]; // 오늘 또는 다음 등교일
+const isExamDay=k=>{const t=DATA.days[k].tt;return t.length===1&&t[0].includes("수학능력");};
+
+// 상단
+$("title").textContent=`${DATA.grade}학년 ${DATA.cls}반`;
+const u=DATA.updated.split("-");$("upd").textContent=`고운고 · ${+u[1]}월 ${+u[2]}일 업데이트`;
+$("weekPill").textContent=`${md(keys[0])} ~ ${md(keys[keys.length-1])}`;
+
+// 오늘 카드
+(function(){
+  const d=DATA.days[focus], isToday=focus===todayK, wd=WD[toD(focus).getDay()];
+  const lead=isToday?"오늘":(toD(focus)-today0===864e5?"내일":`${wd}요일`);
+  const n=d.tt.length, paToday=[...new Set(d.tt.filter(s=>paSet.has(clean(s))).map(short))];
+  let hi;
+  if(!n) hi=`${lead}은 수업 없는 날! 푹 쉬어`;
+  else if(isExamDay(focus)) hi=`${lead}은 수능 날이라 정규 수업 없어. 선배들 응원하자`;
+  else hi=`${lead}${lead.endsWith("요일")?"":`(${wd})`}은 ${n}교시까지야.${paToday.length?` ${paToday.join("·")} 수행 챙기자!`:" 무난한 하루!"}`;
+  if(!isToday&&[0,6].includes(now.getDay()))hi=`주말 잘 보내고 있지? `+hi;
+  $("hi").textContent=hi;
+  const ex=DATA.events.find(e=>/정기시험/.test(e.n)&&toD(e.to)>=today0);
+  const exN=ex?Math.round((toD(ex.from)-today0)/864e5):null;
+  $("stats").innerHTML=
+    `<div class="stat"><div class="num">${n||"-"}</div><span>${lead} 교시</span></div>`+
+    `<div class="stat"><div class="num">${paList.length}</div><span>이번 주 수행</span></div>`+
+    `<div class="stat"><div class="num">${ex?(exN>0?"D-"+exN:"D-day"):"-"}</div><span>${ex?"정기시험":"시험 없음"}</span></div>`;
+})();
+
+// 일정
+(function(){
+  const evs=DATA.events.filter(e=>toD(e.to||e.from)>=today0).sort((a,b)=>a.from.localeCompare(b.from));
+  if(!evs.length){$("sec-ev").hidden=true;return;}
+  $("ev").innerHTML=evs.map(e=>{const n=Math.round((toD(e.from)-today0)/864e5);
+    const label=n>0?"D-"+n:(n===0?"오늘":"진행중");
+    return `<div class="ev-row"><div class="dd ${n<=7?"soon":""}"><span class="num">${label}</span><small>${md(e.from)}${e.to&&e.to!==e.from?"~"+(+e.to.slice(6,8))+".":""}</small></div><div><b>${esc(e.n)}</b>${e.sub?`<p>${esc(e.sub)}</p>`:""}</div></div>`}).join("");
+})();
+
+// 시간표
+(function(){
+  $("ttRange").textContent=`${DATA.grade}-${DATA.cls}`;
+  const max=Math.max(1,...keys.map(k=>DATA.days[k].tt.length));
+  let h='<tr><th class="pc"></th>'+keys.map(k=>`<th class="${k===todayK?"today":""}">${WD[toD(k).getDay()]}<br><span class="num">${+k.slice(6,8)}</span></th>`).join("")+"</tr>";
+  for(let p=0;p<max;p++){
+    h+=`<tr><td class="pnum" style="background:none;height:auto">${p+1}</td>`;
+    keys.forEach(k=>{
+      const tt=DATA.days[k].tt;
+      if(isExamDay(k)){if(p===0)h+=`<td class="off" rowspan="${max}">수능<br>수업<br>없음</td>`;return;}
+      if(!tt.length){if(p===0)h+=`<td class="off" rowspan="${max}">쉬는 날</td>`;return;}
+      const s=tt[p];
+      h+=s?`<td class="${paSet.has(clean(s))?"pa":""}" style="--h:${hue(s)}">${esc(short(s))}</td>`:`<td class="empty"></td>`;
+    });
+    h+="</tr>";
+  }
+  $("tt").innerHTML=h;
+})();
+
+// 급식
+(function(){
+  $("meal").innerHTML=keys.map(k=>{const ms=DATA.days[k].meal||[];
+    return `<div class="mday ${k===focus?"today":""}" data-k="${k}"><h3>${WD[toD(k).getDay()]}<small>${md(k)}</small></h3>`+
+      (ms.length?ms.map(m=>`<div class="meal"><div class="mh"><b>${m.t}</b><span>${m.cal}kcal</span></div><ul>${dishes(m.m).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")
+        :`<div class="nomeal">${isExamDay(k)?"수능 날, 급식 없어":"급식 없는 날"}</div>`)+"</div>";}).join("");
+  const t=$("meal").querySelector(`[data-k="${focus}"]`);
+  if(t)requestAnimationFrame(()=>{$("meal").scrollLeft=t.offsetLeft-16;});
+})();
+
+// 수행 체크 (내 폰에만 저장)
+(function(){
+  let done={};try{done=JSON.parse(localStorage.getItem("paDone")||"{}")}catch(_){}
+  const id=x=>weekStart+"|"+x[0]+"|"+x[1];
+  function draw(){
+    const left=paList.filter(x=>!done[id(x)]).length;
+    $("paCount").textContent=paList.length?(left?`${left}개 남음`:"다 했다!"):"";
+    $("pa").innerHTML=paList.length?paList.map((x,i)=>`<label class="pa-item ${done[id(x)]?"done":""}" for="pa${i}">
+      <input type="checkbox" class="chk" id="pa${i}" data-i="${i}" ${done[id(x)]?"checked":""} aria-label="${esc(x[0])} 완료">
+      <div><div class="pa-sub"><span class="dot" style="--h:${hue(x[0])}"></span>${esc(x[0])}</div>
+      <div class="pa-name">${esc(x[1])}</div>${x[2]?`<div class="tip"><b>팁</b>${esc(x[2])}</div>`:""}</div></label>`).join("")
+      :'<div class="nomeal">이번 주는 수행평가 없어. 시험 공부 집중!</div>';
+  }
+  $("pa").addEventListener("change",e=>{const x=paList[e.target.dataset.i];if(!x)return;done[id(x)]=e.target.checked;try{localStorage.setItem("paDone",JSON.stringify(done))}catch(_){}draw();});
+  draw();
+})();
+
+// 탭바
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{$(b.dataset.go).scrollIntoView({block:"start"});});
+const secs=["sec-today","sec-tt","sec-meal","sec-pa"].map($);
+if("IntersectionObserver" in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.go===e.target.id));}}),{rootMargin:"-40% 0px -55% 0px"});
+  secs.forEach(s=>io.observe(s));
+}
+</script>
+</body>
+</html>
