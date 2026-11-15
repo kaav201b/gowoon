@@ -186,6 +186,59 @@ def build_bus(bus):
         })
     return routes
 
+# ---------------- 날씨 (기상청 단기예보, 공공데이터포털) ----------------
+KMA = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
+NX, NY = 65, 104  # 세종 고운동 격자
+
+
+def build_weather(now):
+    key = urllib.parse.unquote(os.environ.get("DATA_GO_KR_KEY", "").strip())
+    if not key:
+        raise RuntimeError("DATA_GO_KR_KEY 없음")
+    # 05시 발표분(05:10 이후 제공). 그 전에 돌면 전날 23시 발표분
+    if now.hour * 60 + now.minute >= 5 * 60 + 15:
+        base_d, base_t = now, "0500"
+    else:
+        base_d, base_t = now - timedelta(days=1), "2300"
+    q = {"serviceKey": key, "dataType": "JSON", "numOfRows": 2000, "pageNo": 1,
+         "base_date": ymd(base_d), "base_time": base_t, "nx": NX, "ny": NY}
+    with urllib.request.urlopen(KMA + "?" + urllib.parse.urlencode(q), timeout=30) as r:
+        raw = r.read().decode("utf-8", "replace")
+    try:
+        data = json.loads(raw)
+    except ValueError:
+        msg = re.findall(r"<(?:returnAuthMsg|errMsg|resultMsg)>([^<]+)<", raw)
+        raise RuntimeError(f"날씨: JSON 아님 ({', '.join(msg) or raw[:150]})")
+    head = data["response"]["header"]
+    if head.get("resultCode") != "00":
+        raise RuntimeError(f"날씨: {head.get('resultCode')} {head.get('resultMsg')}")
+    items = data["response"]["body"]["items"]["item"]
+
+    days = {}
+    for it in items:
+        d = days.setdefault(it["fcstDate"], {"hours": {}})
+        if it["category"] in ("TMN", "TMX"):
+            d[it["category"]] = it["fcstValue"]
+        else:
+            d["hours"].setdefault(it["fcstTime"], {})[it["category"]] = it["fcstValue"]
+
+    out = {}
+    for k, d in days.items():
+        h = d["hours"]
+        am = h.get("0700") or h.get("0800") or {}
+        pops = [int(v.get("POP", 0)) for t, v in h.items() if "0600" <= t <= "1800" and str(v.get("POP", "")).isdigit()]
+        ptys = [v.get("PTY", "0") for t, v in h.items() if "0600" <= t <= "1800"]
+        rain = next((p for p in ptys if p not in ("0", "")), "0")
+        tmps = [float(v["TMP"]) for v in h.values() if "TMP" in v]
+        out[k] = {
+            "min": round(float(d["TMN"])) if "TMN" in d else (round(min(tmps)) if tmps else None),
+            "max": round(float(d["TMX"])) if "TMX" in d else (round(max(tmps)) if tmps else None),
+            "am": round(float(am["TMP"])) if "TMP" in am else None,
+            "sky": am.get("SKY", ""), "pty": rain, "pop": max(pops) if pops else None,
+        }
+    return out
+
+
 def main():
     now = datetime.now(ZoneInfo("Asia/Seoul")).replace(tzinfo=None)
     today = now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -200,6 +253,11 @@ def main():
     data["events"] = build_events(data.get("events", []), today, days[0])
     data["updated"] = today.strftime("%Y-%m-%d")
     data["ttPartial"] = False
+
+    try:
+        data["weather"] = build_weather(now)
+    except Exception as e:  # 날씨 실패해도 나머지 갱신은 계속
+        print("날씨 갱신 건너뜀:", e)
 
     if data.get("bus"):
         try:
