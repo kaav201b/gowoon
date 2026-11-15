@@ -115,12 +115,20 @@ TAGO = "https://apis.data.go.kr/1613000/BusRouteInfoInqireService/"
 def tago(op, **params):
     key = os.environ.get("DATA_GO_KR_KEY", "").strip()
     if not key:
-        raise RuntimeError("DATA_GO_KR_KEY 없음")
+        raise RuntimeError("DATA_GO_KR_KEY가 GitHub Secrets에 없음")
     key = urllib.parse.unquote(key)  # 인코딩 키를 넣어도 동작하도록
     q = {"serviceKey": key, "_type": "json", "numOfRows": 500, "pageNo": 1, **params}
     url = TAGO + op + "?" + urllib.parse.urlencode(q)
     with urllib.request.urlopen(url, timeout=30) as r:
-        data = json.loads(r.read().decode("utf-8"))
+        raw = r.read().decode("utf-8", "replace")
+    try:
+        data = json.loads(raw)
+    except ValueError:  # 키 오류 등은 XML로 옴
+        msg = re.findall(r"<(?:returnAuthMsg|errMsg|resultMsg)>([^<]+)<", raw)
+        raise RuntimeError(f"{op}: JSON 아님 ({', '.join(msg) or raw[:150]})")
+    header = data.get("response", {}).get("header", {})
+    if str(header.get("resultCode", "00")) not in ("00", "0"):
+        raise RuntimeError(f"{op}: {header.get('resultCode')} {header.get('resultMsg')}")
     body = data.get("response", {}).get("body", {})
     items = body.get("items") or {}
     item = items.get("item", []) if isinstance(items, dict) else []
@@ -134,35 +142,49 @@ def hhmm(v):
     return f"{v[:2]}:{v[2:4]}" if len(v) >= 4 and v[:4].isdigit() else ""
 
 
+def _pos(stops, no, name):
+    # 정류장 번호(nodeno)로 먼저 찾고, 없으면 이름으로 찾음
+    for i, st in enumerate(stops):
+        if str(st.get("nodeno", "")) == no:
+            return i
+    for i, st in enumerate(stops):
+        if name and name in str(st.get("nodenm", "")):
+            return i
+    return -1
+
+
 def build_bus(bus):
-    city = next((c["citycode"] for c in tago("getCtyCodeList") if "세종" in str(c.get("cityname", ""))), None)
+    cities = tago("getCtyCodeList")
+    city = next((c["citycode"] for c in cities if "세종" in str(c.get("cityname", ""))), None)
     if city is None:
         raise RuntimeError("TAGO 도시코드에서 세종을 찾지 못함")
+    print("버스: 세종 도시코드", city)
     routes = []
     for no in bus["nos"]:
         cands = [r for r in tago("getRouteNoList", cityCode=city, routeNo=no) if str(r.get("routeno")) == str(no)]
-        picked = None
-        for r in cands:  # 타는 정류장 다음에 내리는 정류장을 지나는 노선만
-            stops = [str(s.get("nodeno", "")) for s in tago("getRouteAcctoThrghSttnList", cityCode=city, routeId=r["routeid"])]
-            if bus["fromNo"] in stops and bus["toNo"] in stops and stops.index(bus["fromNo"]) < stops.index(bus["toNo"]):
-                picked = r
+        print(f"버스: {no}번 노선 후보 {len(cands)}개")
+        picked, order = None, 0
+        for r in cands:  # 타는 정류장을 지난 뒤 내리는 정류장을 지나는 방향만
+            stops = tago("getRouteAcctoThrghSttnList", cityCode=city, routeId=r["routeid"])
+            i = _pos(stops, bus["fromNo"], bus["from"])
+            j = _pos(stops, bus["toNo"], bus["to"])
+            print(f"  - {r['routeid']}: 정류장 {len(stops)}개, 타는 곳 {i}, 내리는 곳 {j}")
+            if i >= 0 and j > i:
+                picked, order = r, i
                 break
-        else:
-            stops = []
         if not picked:
             routes.append({"no": str(no), "ok": False})
             continue
         info = (tago("getRouteInfoIem", cityCode=city, routeId=picked["routeid"]) or [{}])[0]
+        print(f"  선택: {picked['routeid']} 첫차 {info.get('startvehicletime')} 막차 {info.get('endvehicletime')} 간격 {info.get('intervaltime')}")
         routes.append({
             "no": str(no), "ok": True,
             "first": hhmm(info.get("startvehicletime")), "last": hhmm(info.get("endvehicletime")),
             "gap": str(info.get("intervaltime") or ""), "gapSat": str(info.get("intervalsattime") or ""),
             "gapSun": str(info.get("intervalsuntime") or ""),
-            "span": f'{info.get("startnodenm", "")} → {info.get("endnodenm", "")}'.strip(" →"),
-            "order": stops.index(bus["fromNo"]),  # 기점에서 몇 번째 정류장인지 (예상 시각 계산용)
+            "order": order,
         })
     return routes
-
 
 def main():
     now = datetime.now(ZoneInfo("Asia/Seoul")).replace(tzinfo=None)
