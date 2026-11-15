@@ -28,8 +28,13 @@ h1,h2,.num{font-family:var(--display);font-weight:400;letter-spacing:.01em}
 h2{font-size:20px;margin:0;text-wrap:balance}
 
 /* 상단 */
-.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:20px 2px 2px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 2px 2px}
 .top h1{font-size:24px;margin:0;line-height:1.2}
+.top-r{display:flex;align-items:center;gap:6px}
+.rf{border:0;background:var(--surface);color:var(--accent);width:32px;height:32px;border-radius:10px;display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow)}
+.rf svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.rf:active{transform:rotate(-90deg)}
+.rf:focus-visible{outline:2px solid var(--accent)}
 .wk{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* 오늘 카드 */
@@ -122,7 +127,7 @@ h2{font-size:20px;margin:0;text-wrap:balance}
 <div class="wrap">
   <header class="top">
     <h1 id="title">고운고 1학년 1반</h1>
-    <span class="wk" id="weekPill"></span>
+    <div class="top-r"><span class="wk" id="weekPill"></span><button class="rf" id="refresh" aria-label="새로고침"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg></button></div>
   </header>
 
   <section class="hero" id="sec-today">
@@ -183,7 +188,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -206,7 +211,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -221,6 +226,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -233,6 +239,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -249,7 +256,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -536,6 +543,16 @@ const QUOTES=[["천 리 길도 한 걸음부터", "속담"], ["시작이 반이�
   $("pa").addEventListener("change",e=>{const x=paList[e.target.dataset.i];if(!x)return;done[id(x)]=e.target.checked;try{localStorage.setItem("paDone",JSON.stringify(done))}catch(_){}draw();});
   draw();
 })();
+
+
+// 새로고침: 버튼 + 앱으로 다시 돌아왔을 때 날짜가 바뀌었거나 1시간 지났으면 자동
+const hardReload=()=>location.replace(location.pathname+"?v="+Date.now());
+$("refresh").onclick=hardReload;
+let shownAt=Date.now(), shownDay=todayK;
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState!=="visible")return;
+  if(ymd(new Date())!==shownDay||Date.now()-shownAt>36e5)hardReload();
+});
 
 // 탭바
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{$(b.dataset.go).scrollIntoView({block:"start"});});
