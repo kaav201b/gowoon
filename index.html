@@ -5,6 +5,15 @@
 <meta name="color-scheme" content="only light">
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="고운고">
+<meta name="application-name" content="고운고">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f2f4f6">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
 <title>고운고 1학년 학교생활</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
@@ -59,7 +68,7 @@ h2{font-size:18px}
 .umb{margin-top:-4px;font-size:13px;font-weight:600;color:#fff;background:rgba(255,255,255,.18);padding:9px 12px;border-radius:12px}
 .quote{font-size:14px;color:rgba(255,255,255,.92);line-height:1.55;padding-left:10px;border-left:2px solid rgba(255,255,255,.5)}
 .quote small{display:block;font-size:12px;color:rgba(255,255,255,.7);margin-top:2px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .stat{text-align:center;padding:10px 4px;background:rgba(255,255,255,.14);border-radius:14px}
 .stat .num{font-size:22px;font-weight:700;line-height:1.2;display:block}
 .stat:last-child{background:#fff}
@@ -82,7 +91,7 @@ h2{font-size:18px}
 
 /* 시간표 */
 .tt{width:100%;border-collapse:separate;border-spacing:3px;table-layout:fixed;margin:-3px}
-.tt th{font-size:12px;font-weight:500;color:var(--muted);padding:0 0 6px}
+.tt th{font-size:13px;font-weight:700;color:var(--ink);padding:0 0 6px}
 .tt th.pc{width:16px}
 .tt th .num{display:inline-block;font-size:15px;font-weight:700;color:var(--ink);margin-top:2px;min-width:26px;padding:1px 0;border-radius:8px}
 .tt th.today{color:var(--accent)}
@@ -91,7 +100,7 @@ h2{font-size:18px}
   background:hsl(var(--h) var(--cellS) var(--cellL));color:var(--cellInk)}
 .tt td.empty{background:var(--fill)}
 .tt td.off{background:var(--fill);color:var(--muted);font-size:12px}
-.tt td.off.exam{background:#fff0f0;color:#f03e3e;font-weight:700}
+.tt td.off.exam{background:#fff;border:1px solid #ffc9c9;color:#f03e3e;font-weight:700}
 .tt td.pa::after{content:"";position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--hot)}
 .tt .pnum{font-size:11px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
 .legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:12px}
@@ -102,14 +111,14 @@ h2{font-size:18px}
 .bus-path b{color:var(--ink);font-size:14px;font-weight:600}
 .bus-path .arr{color:var(--muted)}
 .bus-list{display:flex;flex-direction:column}
-.bus-row{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:start;padding:12px 0}
+.bus-row{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;padding:12px 0}
 .bus-row+.bus-row{border-top:1px solid var(--line)}
 .bus-no{font-size:17px;font-weight:700;color:#fff;background:#2fb344;border-radius:10px;text-align:center;padding:6px 0;font-variant-numeric:tabular-nums}
 .bus-t{font-size:14px}
 .bus-t b{font-size:14px;font-weight:600}
-.bus-t .est{color:#e03131;font-size:12px;font-weight:600;margin-left:4px}
+.bus-path .est{margin-left:auto;color:#e03131;font-size:12px;font-weight:600}
 .bus-t small{display:block;font-size:12px;color:var(--muted)}
-.bus-times{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 0}
+.bus-times{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0}
 .bus-times span{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink2);background:var(--fill);border:1px solid var(--line);border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1.2}
 .bus-times span.past{color:#c4cad1;background:transparent;border-color:transparent;text-decoration:line-through;font-weight:400}
 .bus-times span.next{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
@@ -277,7 +286,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -300,7 +309,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -315,6 +324,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -327,6 +337,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -343,7 +354,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -553,7 +564,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-15",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -563,14 +574,6 @@ const DATA = {
   "gapLabel": "10~15"
  },
  "weather": {
-  "20261115": {
-   "min": 8,
-   "max": 18,
-   "am": 10,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
   "20261116": {
    "min": 4,
    "max": 17,
@@ -579,29 +582,13 @@ const DATA = {
    "pty": "0",
    "pop": 30
   },
-  "20261117": {
+  "20261115": {
    "min": 8,
-   "max": 16,
-   "am": 9,
+   "max": 18,
+   "am": 10,
    "sky": "4",
    "pty": "0",
    "pop": 30
-  },
-  "20261118": {
-   "min": 7,
-   "max": 11,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261119": {
-   "min": 4,
-   "max": 4,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
   }
  }
 };
@@ -646,7 +633,6 @@ $("title").textContent=`고운고 ${DATA.grade}학년 ${DATA.cls}반`;
   const ex=DATA.events.find(e=>/정기시험/.test(e.n)&&toD(e.to)>=today0);
   const exN=ex?Math.round((toD(ex.from)-today0)/864e5):null;
   $("stats").innerHTML=
-    `<div class="stat"><div class="num">${n||"-"}</div><span>${lead} 교시</span></div>`+
     `<div class="stat"><div class="num">${paList.length}</div><span>진행 중인 수행</span></div>`+
     `<div class="stat"><div class="num">${ex?(exN>0?"D-"+exN:"D-day"):"-"}</div><span>${ex?"정기시험":"시험 없음"}</span></div>`;
 })();
@@ -680,7 +666,7 @@ const QUOTES=[["천 리 길도 한 걸음부터", "속담"], ["시작이 반이�
 const STOP_MIN=1.5; // 정류장 한 칸당 예상 이동 시간(분) — 실제와 다를 수 있음
 function renderBus(){
   const b=DATA.bus; if(!b){$("sec-bus").hidden=true;return;}
-  $("busPath").innerHTML=`<b>${esc(b.from)}</b><span>${esc(b.dir)}</span><span class="arr">→</span><b>${esc(b.to)}</b>`;
+  $("busPath").innerHTML=`<b>${esc(b.from)}</b><span class="arr">→</span><b>${esc(b.to)}</b><span class="est">예상 시간</span>`;
   const n=new Date(), nowM=n.getHours()*60+n.getMinutes()+n.getSeconds()/60, schoolDay=n.getDay()>=1&&n.getDay()<=5;
   const toM=x=>{const [h,m]=String(x||"").split(":").map(Number);return isNaN(h)?null:h*60+m;};
   const fmt=x=>`${Math.floor(x/60)}:${String(x%60).padStart(2,"0")}`;
@@ -704,8 +690,8 @@ function renderBus(){
         const past=schoolDay&&x<nowM, isBest=best&&best.no===r.no&&best.x===x, isNext=x===next;
         const left=Math.max(0,Math.ceil(x-nowM));
         return `<span class="${past?"past":""}${isBest?" best":isNext?" next":""}">${fmt(x)}${isNext?`<em>${left?left+"분 후":"곧 도착"}</em>`:""}</span>`;}).join("");
-      const head=schoolDay&&times.length&&!next?"오늘 등교 시간대 버스는 끝났어":`8:25 전 ${times.length}대`;
-      t=`<b>${head} <span class="est">예상 시간</span></b><div class="bus-times">${chips}</div>`;
+      const done=schoolDay&&times.length&&!next;
+      t=`${done?"<b>오늘 등교 시간대 버스는 끝났어</b>":""}<div class="bus-times">${chips}</div>`;
     }
     return `<div class="bus-row"><div class="bus-no">${esc(r.no)}</div><div class="bus-t">${t}</div></div>`;}).join("");
   const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
