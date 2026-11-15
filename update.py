@@ -107,6 +107,63 @@ def build_events(old_events, today, first_day):
     return sorted(keep + merged, key=lambda e: e["from"])
 
 
+
+# ---------------- 등교 버스 (국토교통부 TAGO, 공공데이터포털) ----------------
+TAGO = "https://apis.data.go.kr/1613000/BusRouteInfoInqireService/"
+
+
+def tago(op, **params):
+    key = os.environ.get("DATA_GO_KR_KEY", "").strip()
+    if not key:
+        raise RuntimeError("DATA_GO_KR_KEY 없음")
+    key = urllib.parse.unquote(key)  # 인코딩 키를 넣어도 동작하도록
+    q = {"serviceKey": key, "_type": "json", "numOfRows": 500, "pageNo": 1, **params}
+    url = TAGO + op + "?" + urllib.parse.urlencode(q)
+    with urllib.request.urlopen(url, timeout=30) as r:
+        data = json.loads(r.read().decode("utf-8"))
+    body = data.get("response", {}).get("body", {})
+    items = body.get("items") or {}
+    item = items.get("item", []) if isinstance(items, dict) else []
+    return item if isinstance(item, list) else [item]
+
+
+def hhmm(v):
+    v = str(v or "").strip()
+    if len(v) == 3:
+        v = "0" + v
+    return f"{v[:2]}:{v[2:4]}" if len(v) >= 4 and v[:4].isdigit() else ""
+
+
+def build_bus(bus):
+    city = next((c["citycode"] for c in tago("getCtyCodeList") if "세종" in str(c.get("cityname", ""))), None)
+    if city is None:
+        raise RuntimeError("TAGO 도시코드에서 세종을 찾지 못함")
+    routes = []
+    for no in bus["nos"]:
+        cands = [r for r in tago("getRouteNoList", cityCode=city, routeNo=no) if str(r.get("routeno")) == str(no)]
+        picked = None
+        for r in cands:  # 타는 정류장 다음에 내리는 정류장을 지나는 노선만
+            stops = [str(s.get("nodeno", "")) for s in tago("getRouteAcctoThrghSttnList", cityCode=city, routeId=r["routeid"])]
+            if bus["fromNo"] in stops and bus["toNo"] in stops and stops.index(bus["fromNo"]) < stops.index(bus["toNo"]):
+                picked = r
+                break
+        else:
+            stops = []
+        if not picked:
+            routes.append({"no": str(no), "ok": False})
+            continue
+        info = (tago("getRouteInfoIem", cityCode=city, routeId=picked["routeid"]) or [{}])[0]
+        routes.append({
+            "no": str(no), "ok": True,
+            "first": hhmm(info.get("startvehicletime")), "last": hhmm(info.get("endvehicletime")),
+            "gap": str(info.get("intervaltime") or ""), "gapSat": str(info.get("intervalsattime") or ""),
+            "gapSun": str(info.get("intervalsuntime") or ""),
+            "span": f'{info.get("startnodenm", "")} → {info.get("endnodenm", "")}'.strip(" →"),
+            "order": stops.index(bus["fromNo"]),  # 기점에서 몇 번째 정류장인지 (예상 시각 계산용)
+        })
+    return routes
+
+
 def main():
     now = datetime.now(ZoneInfo("Asia/Seoul")).replace(tzinfo=None)
     today = now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -121,6 +178,13 @@ def main():
     data["events"] = build_events(data.get("events", []), today, days[0])
     data["updated"] = today.strftime("%Y-%m-%d")
     data["ttPartial"] = False
+
+    if data.get("bus"):
+        try:
+            data["bus"]["routes"] = build_bus(data["bus"])
+            data["bus"]["updated"] = today.strftime("%Y-%m-%d")
+        except Exception as e:  # 버스 정보 실패해도 시간표·급식 갱신은 계속
+            print("버스 정보 갱신 건너뜀:", e)
 
     block = "\nconst DATA = " + json.dumps(data, ensure_ascii=False, indent=1) + ";\n"
     open(HTML, "w", encoding="utf-8").write(html[:a] + block + html[b:])
