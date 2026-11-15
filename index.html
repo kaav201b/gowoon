@@ -12,7 +12,7 @@
 :root{
   --bg:#f2f4f6; --surface:#ffffff; --ink:#191f28; --ink2:#4e5968; --muted:#8b95a1; --line:#e5e8eb; --fill:#f9fafb;
   --accent:#2f6bff; --accent-soft:#eaf1ff; --hot:#f04452; --hot-soft:#fff0f1; --ok:#12b886;
-  --cellS:55%; --cellL:95%; --cellInk:#333d4b;
+  --cellS:75%; --cellL:90%; --cellInk:#333d4b;
   --radius:20px; --shadow:0 1px 2px rgba(0,27,55,.04);
   --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   color-scheme:only light;
@@ -39,11 +39,14 @@ h2{font-size:18px}
 .card,.hero{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);scroll-margin-top:12px}
 .card-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:14px}
 .card-h span{font-size:13px;color:var(--muted);font-weight:500}
+.card-h h2{display:flex;align-items:center;gap:8px}
+.card-h h2 i{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;flex:none;background:var(--c)}
+.card-h h2 i svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
 /* 오늘 카드 */
-.hero{display:flex;flex-direction:column;gap:16px}
+.hero{display:flex;flex-direction:column;gap:16px;background:linear-gradient(160deg,#3a7bff 0%,#2457e6 100%);color:#fff;box-shadow:0 8px 24px rgba(36,87,230,.25)}
 .hero .hi{font-size:20px;font-weight:700;line-height:1.4;letter-spacing:-.02em;text-wrap:balance}
-.wx{display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;background:var(--fill)}
+.wx{display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;background:rgba(255,255,255,.95);color:var(--ink)}
 .wx .ic{width:40px;height:40px;flex:none}
 .wx .ic svg{width:100%;height:100%}
 .wx .t{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -51,22 +54,24 @@ h2{font-size:18px}
 .wx .t span{font-size:13px;color:var(--ink2)}
 .wx .r{margin-left:auto;text-align:right;font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums;line-height:1.6}
 .wx .r b{color:var(--ink);font-weight:600}
-.umb{margin-top:-8px;font-size:13px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:9px 12px;border-radius:12px}
-.quote{font-size:14px;color:var(--ink2);line-height:1.55}
-.quote small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);padding-top:14px}
-.stat{text-align:center;padding:0 4px}
-.stat+.stat{border-left:1px solid var(--line)}
+.umb{margin-top:-8px;font-size:13px;font-weight:600;color:#fff;background:rgba(255,255,255,.18);padding:9px 12px;border-radius:12px}
+.quote{font-size:14px;color:rgba(255,255,255,.92);line-height:1.55;padding-left:10px;border-left:2px solid rgba(255,255,255,.5)}
+.quote small{display:block;font-size:12px;color:rgba(255,255,255,.7);margin-top:2px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{text-align:center;padding:10px 4px;background:rgba(255,255,255,.14);border-radius:14px}
 .stat .num{font-size:22px;font-weight:700;line-height:1.2;display:block}
-.stat:last-child .num{color:var(--accent)}
-.stat span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.stat:last-child{background:#fff}
+.stat:last-child .num{color:#f03e3e}
+.stat:last-child span{color:var(--muted)}
+.stat span{display:block;font-size:12px;color:rgba(255,255,255,.8);margin-top:2px}
 
 /* 일정 */
 .ev{display:flex;flex-direction:column}
-.ev-row{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;padding:10px 0}
+.ev-row{display:grid;grid-template-columns:68px 1fr;gap:14px;align-items:center;padding:10px 0}
 .ev-row+.ev-row{border-top:1px solid var(--line)}
-.dd{text-align:left}
+.dd{text-align:center;background:var(--accent-soft);border-radius:12px;padding:8px 0 6px}
 .dd .num{font-size:17px;font-weight:700;color:var(--accent);display:block;line-height:1.2}
+.dd.soon{background:var(--hot-soft)}
 .dd.soon .num{color:var(--hot)}
 .dd small{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .ev-row b{display:block;font-size:15px;font-weight:600}
@@ -83,6 +88,7 @@ h2{font-size:18px}
   background:hsl(var(--h) var(--cellS) var(--cellL));color:var(--cellInk)}
 .tt td.empty{background:var(--fill)}
 .tt td.off{background:var(--fill);color:var(--muted);font-size:12px}
+.tt td.off.exam{background:#fff0f0;color:#f03e3e;font-weight:700}
 .tt td.pa::after{content:"";position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--hot)}
 .tt .pnum{font-size:11px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
 .legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:12px}
@@ -100,12 +106,13 @@ h2{font-size:18px}
 .bus-t b{font-size:14px;font-weight:600}
 .bus-t .est{color:#e03131;font-size:12px;font-weight:600;margin-left:4px}
 .bus-t small{display:block;font-size:12px;color:var(--muted)}
-.bus-times{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
-.bus-times span{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink2);background:var(--fill);border:1px solid var(--line);border-radius:8px;padding:3px 8px;display:inline-flex;align-items:baseline;gap:4px}
+.bus-times{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 0}
+.bus-times span{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink2);background:var(--fill);border:1px solid var(--line);border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1.2}
 .bus-times span.past{color:#c4cad1;background:transparent;border-color:transparent;text-decoration:line-through;font-weight:400}
 .bus-times span.next{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-.bus-times span.best{background:var(--accent);border-color:var(--accent);color:#fff;font-size:14px}
+.bus-times span.best{background:var(--accent);border-color:var(--accent);color:#fff}
 .bus-times em{font-style:normal;font-size:11px;font-weight:600;opacity:.9}
+.bus-times span.past{border-color:var(--line);background:transparent}
 .bus-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:13px;border-radius:14px;background:var(--accent-soft);color:var(--accent);text-decoration:none;font-weight:700;font-size:15px}
 .bus-btn:active{filter:brightness(.97)}
 
@@ -113,13 +120,14 @@ h2{font-size:18px}
 .strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:0 20px 2px;scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
 .mday{flex:0 0 31%;min-width:108px;max-width:140px;scroll-snap-align:start;border-radius:14px;padding:12px 10px;background:var(--fill);border:1px solid transparent}
-.mday.today{background:var(--surface);border-color:var(--accent)}
+.mday.today{background:var(--accent-soft);border-color:var(--accent)}
 .mday h3{margin:0 0 8px;font-size:15px;font-weight:700;display:flex;align-items:baseline;gap:4px}
 .mday.today h3{color:var(--accent)}
 .mday h3 small{font-size:11px;color:var(--muted);font-weight:500}
 .meal+.meal{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
 .mh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
-.mh b{font-size:11px;font-weight:700;color:var(--muted)}
+.mh b{font-size:11px;font-weight:700;color:#f76707}
+.meal+.meal .mh b{color:#7048e8}
 .mh span{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
 .meal ul{margin:0;padding:0;list-style:none}
 .meal li{font-size:13px;line-height:1.5;color:var(--ink2);overflow-wrap:anywhere}
@@ -140,15 +148,15 @@ h2{font-size:18px}
 .subj::before{content:"";width:8px;height:8px;border-radius:3px;background:hsl(var(--h) 60% 55%)}
 .meta{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .pa-name{font-size:14px;color:var(--ink2);margin:0 0 8px}
-.tip{font-size:13px;line-height:1.55;color:var(--ink2);background:var(--fill);border-radius:12px;padding:10px 12px}
-.tip b{display:block;color:var(--accent);font-weight:700;font-size:12px;margin-bottom:2px}
+.tip{font-size:13px;line-height:1.55;color:var(--ink2);background:hsl(var(--h) 80% 96%);border-radius:12px;padding:10px 12px}
+.tip b{display:block;color:#e03131;font-weight:700;font-size:12px;margin-bottom:2px}
 
 /* 하단 탭바 */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0))}
 .tabbar nav{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
 .tab{border:0;background:none;font:500 11px var(--font);color:#b0b8c1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;border-radius:10px}
 .tab svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.tab.on{color:var(--ink)}
+.tab.on{color:var(--accent)}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
 </head>
@@ -167,30 +175,30 @@ h2{font-size:18px}
   </section>
 
   <section class="card" id="sec-ev">
-    <div class="card-h"><h2>다가오는 일정</h2></div>
+    <div class="card-h"><h2><i style="--c:#f04452"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M9 3v4M15 3v4"/></svg></i>다가오는 일정</h2></div>
     <div class="ev" id="ev"></div>
   </section>
 
   <section class="card" id="sec-tt">
-    <div class="card-h"><h2>이번 주 시간표</h2><span id="ttRange"></span></div>
+    <div class="card-h"><h2><i style="--c:#2f6bff"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 10h16M10 4v16"/></svg></i>이번 주 시간표</h2><span id="ttRange"></span></div>
     <table class="tt" id="tt"></table>
     <div class="legend"><i></i>수행 주간</div>
   </section>
 
   <section class="card" id="sec-bus">
-    <div class="card-h"><h2>등교 버스</h2></div>
+    <div class="card-h"><h2><i style="--c:#2fb344"><svg viewBox="0 0 24 24"><path d="M6 4h12a2 2 0 0 1 2 2v10H4V6a2 2 0 0 1 2-2zM4 12h16M8 20v-4M16 20v-4"/></svg></i>등교 버스</h2></div>
     <div class="bus-path" id="busPath"></div>
     <div class="bus-list" id="busList"></div>
     <a class="bus-btn" id="busLink" target="_blank" rel="noopener">실시간 도착 보기</a>
   </section>
 
   <section class="card" id="sec-meal">
-    <div class="card-h"><h2>오늘 뭐 먹지?</h2></div>
+    <div class="card-h"><h2><i style="--c:#f76707"><svg viewBox="0 0 24 24"><path d="M4 13h16a8 8 0 0 1-16 0zM9 9c0-2 2-2 2-4M14 9c0-2 2-2 2-4"/></svg></i>오늘 뭐 먹지?</h2></div>
     <div class="strip" id="meal"></div>
   </section>
 
   <section class="card" id="sec-pa">
-    <div class="card-h"><h2>이번 주 수행 체크</h2><span id="paCount"></span></div>
+    <div class="card-h"><h2><i style="--c:#7048e8"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></i>이번 주 수행 체크</h2><span id="paCount"></span></div>
     <div class="pa-list" id="pa"></div>
   </section>
 
@@ -225,7 +233,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -248,7 +256,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -263,6 +271,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -275,6 +284,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -291,7 +301,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -501,7 +511,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-15",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -511,14 +521,6 @@ const DATA = {
   "gapLabel": "10~15"
  },
  "weather": {
-  "20261115": {
-   "min": 8,
-   "max": 18,
-   "am": 10,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
   "20261116": {
    "min": 4,
    "max": 17,
@@ -526,30 +528,6 @@ const DATA = {
    "sky": "3",
    "pty": "0",
    "pop": 30
-  },
-  "20261117": {
-   "min": 8,
-   "max": 16,
-   "am": 9,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
-  "20261118": {
-   "min": 7,
-   "max": 11,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261119": {
-   "min": 4,
-   "max": 4,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
   }
  }
 };
@@ -637,7 +615,8 @@ function renderBus(){
   const fmt=x=>`${Math.floor(x/60)}:${String(x%60).padStart(2,"0")}`;
   const rows=b.routes.map(r=>{
     const g=+r.gap||+((b.gaps||{})[r.no]||0), f=toM(r.first), l=toM(r.last), off=Math.round((r.order||0)*STOP_MIN), times=[];
-    if(r.ok&&g>0&&f!=null){for(let x=f+off;x<=(l??1440)+off;x+=g){if(x>=440&&x<=510)times.push(x);}}
+    if(r.ok&&g>0&&f!=null){for(let x=f+off;x<=(l??1440)+off;x+=g){if(x>=440&&x<505)times.push(x);}}
+    times.splice(0,Math.max(0,times.length-3)); // 8:25 전 마지막 3대
     return {r,g,times};
   });
   // 전체에서 가장 먼저 오는 버스
@@ -654,7 +633,7 @@ function renderBus(){
         const past=schoolDay&&x<nowM, isBest=best&&best.no===r.no&&best.x===x, isNext=x===next;
         const left=Math.max(0,Math.ceil(x-nowM));
         return `<span class="${past?"past":""}${isBest?" best":isNext?" next":""}">${fmt(x)}${isNext?`<em>${left?left+"분 후":"곧 도착"}</em>`:""}</span>`;}).join("");
-      const head=schoolDay&&times.length&&!next?"오늘 등교 시간대 버스는 끝났어":`7:20~8:30 사이 ${times.length}대`;
+      const head=schoolDay&&times.length&&!next?"오늘 등교 시간대 버스는 끝났어":`8:25 전 ${times.length}대`;
       t=`<b>${head} <span class="est">예상 시간</span></b><div class="bus-times">${chips}</div>`;
     }
     return `<div class="bus-row"><div class="bus-no">${esc(r.no)}</div><div class="bus-t">${t}</div></div>`;}).join("");
@@ -681,7 +660,7 @@ renderBus(); setInterval(renderBus,30000);
     h+=`<tr><td class="pnum" style="background:none;height:auto">${p+1}</td>`;
     keys.forEach(k=>{
       const tt=DATA.days[k].tt;
-      if(isExamDay(k)){if(p===0)h+=`<td class="off" rowspan="${max}">수능<br>수업<br>없음</td>`;return;}
+      if(isExamDay(k)){if(p===0)h+=`<td class="off exam" rowspan="${max}">수능<br>수업<br>없음</td>`;return;}
       if(!tt.length){if(p===0)h+=`<td class="off" rowspan="${max}">쉬는 날</td>`;return;}
       const s=tt[p];
       h+=s?`<td class="${paSet.has(clean(s))?"pa":""}" style="--h:${hue(s)}">${esc(short(s))}</td>`:`<td class="empty"></td>`;
@@ -708,7 +687,7 @@ renderBus(); setInterval(renderBus,30000);
   function draw(){
     const left=paList.filter(x=>!done[id(x)]).length;
     $("paCount").textContent=paList.length?(left?`${left}개 남음`:"다 했다!"):"";
-    $("pa").innerHTML=paList.length?paList.map((x,i)=>`<label class="pa-item ${done[id(x)]?"done":""}" for="pa${i}">
+    $("pa").innerHTML=paList.length?paList.map((x,i)=>`<label class="pa-item ${done[id(x)]?"done":""}" for="pa${i}" style="--h:${hue(x[0])}">
       <input type="checkbox" class="chk" id="pa${i}" data-i="${i}" ${done[id(x)]?"checked":""} aria-label="${esc(x[0])} 완료">
       <div><div class="pa-head"><span class="subj" style="--h:${hue(x[0])}">${esc(x[0])}</span>${x[4]?`<span class="meta">${esc(x[4])}</span>`:""}</div>
       <div class="pa-name">${esc(x[1])}</div>${x[2]?`<div class="tip">${x[3]?`<b>${esc(x[3])}</b>`:""}${esc(x[2])}</div>`:""}</div></label>`).join("")
