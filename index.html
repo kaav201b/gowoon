@@ -157,6 +157,31 @@ h2{font-size:18px}
 .tab{border:0;background:none;font:500 11px var(--font);color:#b0b8c1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;border-radius:10px}
 .tab svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tab.on{color:var(--accent)}
+
+/* 화면 편집 */
+.user-hidden{display:none!important}
+.edit-btn{align-self:center;display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:var(--muted);font:600 13px var(--font);padding:10px 14px;border-radius:12px;cursor:pointer}
+.edit-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.edit-btn:active{background:var(--line)}
+.sheet-bg{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center}
+.sheet-bg[hidden]{display:none}
+.sheet{width:100%;max-width:480px;background:var(--surface);border-radius:24px 24px 0 0;padding:22px 20px calc(16px + env(safe-area-inset-bottom,0));max-height:85vh;overflow:auto}
+.sheet-h{margin-bottom:12px}
+.sheet-h span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.ed-list{list-style:none;margin:0;padding:0}
+.ed-list li{display:flex;align-items:center;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+.ed-list li .nm{flex:1;font-size:15px;font-weight:600;display:flex;align-items:center;gap:10px}
+.ed-list li .nm i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.ed-list li.off .nm{color:#c4cad1}
+.ed-list button{width:38px;height:38px;border:0;border-radius:10px;background:var(--fill);color:var(--ink2);display:grid;place-items:center;cursor:pointer}
+.ed-list button:disabled{opacity:.3}
+.ed-list button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ed-list li.off button.eye{color:#c4cad1}
+.sheet-f{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:16px}
+.sheet-f button{border:0;border-radius:14px;padding:14px;font:700 15px var(--font);cursor:pointer}
+.sheet-f .ghost{background:var(--fill);color:var(--ink2)}
+.sheet-f .primary{background:var(--accent);color:#fff}
+.ed-list button:focus-visible,.sheet-f button:focus-visible,.edit-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
 </head>
@@ -202,6 +227,16 @@ h2{font-size:18px}
     <div class="pa-list" id="pa"></div>
   </section>
 
+  <button class="edit-btn" id="editBtn" type="button"><svg viewBox="0 0 24 24"><path d="M4 7h10M4 12h16M4 17h7"/><circle cx="17" cy="7" r="2"/><circle cx="14" cy="17" r="2"/></svg>화면 편집</button>
+
+</div>
+
+<div class="sheet-bg" id="sheetBg" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-h"><h2 id="sheetTitle">화면 편집</h2><span>순서를 바꾸거나 숨길 수 있어</span></div>
+    <ul class="ed-list" id="edList"></ul>
+    <div class="sheet-f"><button type="button" class="ghost" id="edReset">처음대로</button><button type="button" class="primary" id="edDone">완료</button></div>
+  </div>
 </div>
 
 <div class="tabbar"><nav aria-label="바로가기">
@@ -233,7 +268,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -256,7 +291,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -271,6 +306,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -283,6 +319,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -299,7 +336,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -509,7 +546,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-15",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -519,14 +556,6 @@ const DATA = {
   "gapLabel": "10~15"
  },
  "weather": {
-  "20261115": {
-   "min": 8,
-   "max": 18,
-   "am": 10,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
   "20261116": {
    "min": 4,
    "max": 17,
@@ -534,30 +563,6 @@ const DATA = {
    "sky": "3",
    "pty": "0",
    "pop": 30
-  },
-  "20261117": {
-   "min": 8,
-   "max": 16,
-   "am": 9,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
-  "20261118": {
-   "min": 7,
-   "max": 11,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261119": {
-   "min": 4,
-   "max": 4,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
   }
  }
 };
@@ -736,6 +741,46 @@ document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState!=="visible")return;
   if(ymd(new Date())!==shownDay||Date.now()-shownAt>36e5)hardReload();
 });
+
+
+// 화면 편집 (순서·숨김, 이 기기에만 저장)
+(function(){
+  const SECS=[["sec-today","오늘","#2f6bff"],["sec-ev","다가오는 일정","#f04452"],["sec-tt","이번 주 시간표","#2f6bff"],
+    ["sec-bus","등교 버스","#2fb344"],["sec-meal","급식","#f76707"],["sec-pa","수행 체크","#7048e8"]];
+  const DEF=SECS.map(x=>x[0]);
+  let st={order:DEF.slice(),hidden:[]};
+  try{const v=JSON.parse(localStorage.getItem("layout")||"null");if(v&&Array.isArray(v.order)){st.order=v.order.filter(id=>DEF.includes(id));DEF.forEach(id=>{if(!st.order.includes(id))st.order.push(id);});st.hidden=(v.hidden||[]).filter(id=>DEF.includes(id));}}catch(_){}
+  const wrap=document.querySelector(".wrap"), btn=$("editBtn");
+  function apply(){
+    st.order.forEach(id=>{const el=$(id);if(el)wrap.insertBefore(el,btn);});
+    DEF.forEach(id=>$(id)&&$(id).classList.toggle("user-hidden",st.hidden.includes(id)));
+    document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("user-hidden",st.hidden.includes(t.dataset.go)));
+  }
+  function save(){try{localStorage.setItem("layout",JSON.stringify(st));}catch(_){}}
+  const up='<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>', dn='<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+  const eye='<svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const eyeOff='<svg viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10.5 10.5 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a10 10 0 0 0 5.4-1.6"/></svg>';
+  function draw(){
+    $("edList").innerHTML=st.order.map((id,i)=>{const [,nm,c]=SECS.find(x=>x[0]===id);const off=st.hidden.includes(id);
+      return `<li class="${off?"off":""}"><span class="nm"><i style="--c:${c}"></i>${nm}</span>
+        <button type="button" data-a="up" data-i="${i}" aria-label="${nm} 위로" ${i===0?"disabled":""}>${up}</button>
+        <button type="button" data-a="dn" data-i="${i}" aria-label="${nm} 아래로" ${i===st.order.length-1?"disabled":""}>${dn}</button>
+        <button type="button" class="eye" data-a="eye" data-i="${i}" aria-label="${nm} ${off?"보이기":"숨기기"}">${off?eyeOff:eye}</button></li>`;}).join("");
+  }
+  $("edList").addEventListener("click",e=>{
+    const b=e.target.closest("button");if(!b)return;const i=+b.dataset.i,id=st.order[i];
+    if(b.dataset.a==="up"&&i>0)[st.order[i-1],st.order[i]]=[st.order[i],st.order[i-1]];
+    if(b.dataset.a==="dn"&&i<st.order.length-1)[st.order[i+1],st.order[i]]=[st.order[i],st.order[i+1]];
+    if(b.dataset.a==="eye")st.hidden=st.hidden.includes(id)?st.hidden.filter(x=>x!==id):[...st.hidden,id];
+    save();apply();draw();
+  });
+  btn.onclick=()=>{draw();$("sheetBg").hidden=false;};
+  const close=()=>{$("sheetBg").hidden=true;};
+  $("edDone").onclick=close;
+  $("sheetBg").addEventListener("click",e=>{if(e.target.id==="sheetBg")close();});
+  $("edReset").onclick=()=>{st={order:DEF.slice(),hidden:[]};save();apply();draw();};
+  apply();
+})();
 
 // 탭바
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{$(b.dataset.go).scrollIntoView({block:"start"});});
