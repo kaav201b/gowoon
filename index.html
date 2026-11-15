@@ -124,6 +124,7 @@ h2{font-size:18px}
 .bus-times span.next{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .bus-times span.best{background:var(--accent);border-color:var(--accent);color:#fff}
 .bus-times em{font-style:normal;font-size:11px;font-weight:600;opacity:.9}
+.bus-times em.hurry{opacity:1;color:#fff;background:#f03e3e;border-radius:6px;padding:0 5px;margin-top:2px}
 .bus-times span.past{border-color:var(--line);background:transparent}
 .bus-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:13px;border-radius:14px;background:var(--accent-soft);color:var(--accent);text-decoration:none;font-weight:700;font-size:15px}
 .bus-btn:active{filter:brightness(.97)}
@@ -299,7 +300,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -322,7 +323,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -337,6 +338,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -349,6 +351,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -365,7 +368,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -727,7 +730,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-15",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -737,14 +740,6 @@ const DATA = {
   "gapLabel": "10~15"
  },
  "weather": {
-  "20261115": {
-   "min": 8,
-   "max": 18,
-   "am": 10,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
   "20261116": {
    "min": 4,
    "max": 17,
@@ -753,29 +748,13 @@ const DATA = {
    "pty": "0",
    "pop": 30
   },
-  "20261117": {
+  "20261115": {
    "min": 8,
-   "max": 16,
-   "am": 9,
+   "max": 18,
+   "am": 10,
    "sky": "4",
    "pty": "0",
    "pop": 30
-  },
-  "20261118": {
-   "min": 7,
-   "max": 11,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261119": {
-   "min": 4,
-   "max": 4,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
   }
  }
 };
@@ -876,7 +855,7 @@ function renderBus(){
       const chips=times.map(x=>{
         const past=schoolDay&&x<nowM, isBest=best&&best.no===r.no&&best.x===x, isNext=x===next;
         const left=Math.max(0,Math.ceil(x-nowM));
-        return `<span class="${past?"past":""}${isBest?" best":isNext?" next":""}">${fmt(x)}${isNext?`<em>${left?left+"분 후":"곧 도착"}</em>`:""}</span>`;}).join("");
+        return `<span class="${past?"past":""}${isBest?" best":isNext?" next":""}">${fmt(x)}${isNext?`<em class="${left<=10?"hurry":""}">${left?left+"분 후":"곧 도착"}</em>`:""}</span>`;}).join("");
       const done=schoolDay&&times.length&&!next;
       t=`${done?"<b>오늘 등교 시간대 버스는 끝났어</b>":""}<div class="bus-times">${chips}</div>`;
     }
@@ -937,8 +916,8 @@ renderBus(); setInterval(renderBus,30000);
       <div><label for="pa${i}" class="pa-head"><span class="subj">${esc(x[0])}</span>${x[4]?`<span class="meta">${esc(x[4])}</span>`:""}</label>
       <div class="pa-name">${esc(x[1])}</div>${x[2]?`<div class="tip">${x[3]?`<b>${esc(x[3])}</b>`:""}${esc(x[2])}</div>`:""}
       ${dt.a||dt.chk?`<details class="more"><summary>자세히 보기</summary>
-        ${dt.a?`<div class="lv"><b>${x[0]==="생태와 환경"?"통과 기준":"A를 받으려면"}</b>${esc(dt.a)}<small>학교 평가계획 성취수준 기준</small></div>`:""}
-        ${dt.chk?`<div class="ck"><b>제출 전 체크</b><ul>${dt.chk.map(c=>`<li>${esc(c)}</li>`).join("")}</ul><small>참고용 · 채점 기준은 선생님 공지가 최종</small></div>`:""}
+        ${dt.a?`<div class="lv"><b>${x[0]==="생태와 환경"?"통과 포인트":"A 포인트"}</b>${esc(dt.a)}</div>`:""}
+        ${dt.chk?`<div class="ck"><b>제출 전 체크</b><ul>${dt.chk.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>`:""}
       </details>`:""}</div></div>`;}).join("")
       :'<div class="nomeal">이번 주는 수행평가 없어. 시험 공부 집중!</div>';
   }
