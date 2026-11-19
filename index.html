@@ -146,6 +146,28 @@ h2{font-size:18px}
 .lmsg b{color:#f03e3e;font-weight:700}
 .lmsg span{color:var(--muted);font-size:12px;margin-left:2px}
 .lmsg em{font-style:normal;color:var(--muted)}
+.bus-go .go{display:flex;flex-direction:column;gap:2px;padding:14px 16px;border-radius:16px;margin-bottom:10px}
+.go b{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.go span{font-size:13px;font-weight:500;opacity:.9}
+.go.green{background:#e6fcf5;color:#087f5b}
+.go.amber{background:#fff4e6;color:#d9480f}
+.go.red{background:#fff0f0;color:#e03131}
+.go.gray{background:var(--fill);color:var(--muted)}
+.bus-list[hidden]{display:none}
+.bus-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bc{border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.bc-h{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.bc .bus-no{font-size:14px;padding:3px 8px;border-radius:8px}
+.bc-at{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bc-m{font-size:34px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.bc-m small{font-size:15px;font-weight:700;margin-left:2px}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:currentColor}
+.bc-s{font-size:12px;color:var(--ink2);font-weight:600}
+.bc-s span{display:block;font-weight:400;color:var(--muted);font-size:11px}
+.bc.green{color:#0ca678}.bc.amber{color:#f76707}.bc.red{color:#f03e3e}.bc.none{color:#c4cad1}
+.bc .bc-s,.bc .bc-at{color:var(--ink2)}
+.bc.none .bc-s{color:var(--muted)}
 /* 급식 */
 .strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:0 20px 2px;scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
@@ -262,7 +284,9 @@ html,body{overscroll-behavior-y:contain}
   <section class="card" id="sec-bus">
     <div class="card-h"><h2><i style="--c:#2fb344"><svg viewBox="0 0 24 24"><path d="M6 4h12a2 2 0 0 1 2 2v10H4V6a2 2 0 0 1 2-2zM4 12h16M8 20v-4M16 20v-4"/></svg></i>등교 버스</h2></div>
     <div class="bus-path" id="busPath"></div>
-    <div class="bus-list" id="busList"></div>
+    <div class="bus-go" id="busGo"></div>
+    <div class="bus-grid" id="busGrid"></div>
+    <div class="bus-list" id="busList" hidden></div>
     <button type="button" class="bus-btn" id="busRefresh"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg><span id="busRefreshTxt">새로고침</span></button>
   </section>
 
@@ -298,7 +322,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -317,7 +341,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -340,7 +364,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -355,6 +379,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -367,6 +392,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -383,7 +409,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -745,7 +771,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-20",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -772,45 +798,21 @@ const DATA = {
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  }
 };
@@ -911,25 +913,43 @@ renderBus(); setInterval(renderBus,30000);
 
 // 실시간 버스 위치 (Google Apps Script 중계)
 var LIVE=null, liveAt=0, LIVE_ERR="";
+const WALK=5; // 집 → 정류장 걷는 시간(분)
 function drawLive(){
-  const lines=(DATA.bus&&DATA.bus.lines)||{}, MAXS=5;
-  document.querySelectorAll(".live").forEach(el=>{
-    if(!LIVE){el.innerHTML=(DATA.bus&&DATA.bus.live)?`<div class="lmsg"><i class="off"></i><em>${LIVE_ERR?`실시간 연결 안 됨 (${esc(LIVE_ERR)})`:"실시간 위치 불러오는 중…"}</em></div>`:"";return;}
-    const no=el.dataset.no, names=(lines[no]||[]).slice(-MAXS), n=names.length;
+  const lines=(DATA.bus&&DATA.bus.lines)||{}, MAXS=5, routes=(DATA.bus&&DATA.bus.routes||[]).map(r=>r.no);
+  const fmt=d=>`${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;
+  if(!LIVE){
+    $("busGo").innerHTML=(DATA.bus&&DATA.bus.live)?`<div class="go gray"><b>${LIVE_ERR?"실시간 연결 안 됨":"불러오는 중…"}</b>${LIVE_ERR?`<span>${esc(LIVE_ERR)}</span>`:""}</div>`:"";
+    $("busGrid").innerHTML="";return;
+  }
+  const now=Date.now(), cards=[], cands=[];
+  routes.forEach(no=>{
+    const n=Math.min(MAXS,(lines[no]||[]).length||MAXS);
     const r=(LIVE.routes||[]).find(x=>x.no===no);
     const bs=(r?r.buses:[]).filter(b=>b.left<=n).sort((a,b)=>a.left-b.left);
-    const occ=new Set(bs.map(b=>b.left));
-    // 정류장 점: 왼쪽이 멀리, 오른쪽 끝이 두루중학교
-    let dots="";
-    for(let k=n;k>=1;k--) dots+=`<span class="st${occ.has(k)?" bus":""}" title="${esc(names[n-k])}"></span><span class="ln"></span>`;
-    dots+=`<span class="st goal${occ.has(0)?" bus":""}"></span>`;
     const near=bs[0];
-    const mins=near?Math.max(1,Math.round(near.left*STOP_MIN)):0, at=new Date(Date.now()+mins*60000);
-    const hm=`${at.getHours()}:${String(at.getMinutes()).padStart(2,"0")}`;
-    const msg=near?(near.left===0?`<b>지금 정류장에 도착</b>`:`<b>${hm} 도착 예상</b> · 약 ${mins}분 후 · ${near.left}정거장 전<span>${esc(names[n-near.left]||near.at)}</span>`)
-                  :`<em>${n}정거장 안에 오는 버스 없음</em>`;
-    el.innerHTML=`<div class="track">${dots}<span class="gl">두루중</span></div><div class="lmsg"><i class="${near?"":"off"}"></i>${msg}</div>`;
+    if(near){
+      const m=near.left===0?0:Math.max(1,Math.round(near.left*STOP_MIN)), at=new Date(now+m*60000);
+      cands.push({no,m,at});
+      const lv=m<=5?"red":(m<=10?"amber":"green"), pct=Math.round((n-near.left)/n*100);
+      cards.push(`<div class="bc ${lv}"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${fmt(at)} 도착</span></div>
+        <div class="bc-m">${m===0?"도착":`${m}<small>분</small>`}</div>
+        <div class="bar"><i style="width:${pct}%"></i></div>
+        <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${esc((lines[no]||[])[n-near.left]||near.at)}</span></div></div>`);
+    }else{
+      cards.push(`<div class="bc none"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bar"><i style="width:0"></i></div><div class="bc-s">${n}정거장 안에 없음</div></div>`);
+    }
   });
+  // 행동 안내: 걸어서 탈 수 있는 가장 빠른 버스
+  cands.sort((a,b)=>a.m-b.m);
+  const ok=cands.find(c=>c.m>=WALK), hurry=cands.find(c=>c.m>=WALK-1);
+  let go;
+  if(ok&&ok.m-WALK>=3) go=`<div class="go green"><b>여유 있어</b><span>${ok.no}번 ${fmt(ok.at)} 도착 · ${fmt(new Date(ok.at-WALK*60000))}에 집에서 출발</span></div>`;
+  else if(ok) go=`<div class="go amber"><b>지금 나가!</b><span>${ok.no}번 ${fmt(ok.at)} 도착 · 걸어서 ${WALK}분</span></div>`;
+  else if(hurry) go=`<div class="go red"><b>뛰어!</b><span>${hurry.no}번 ${hurry.m}분 후 도착</span></div>`;
+  else if(cands.length) go=`<div class="go red"><b>이번 버스는 어려워</b><span>다음 버스를 기다려 · 걸어서 ${WALK}분</span></div>`;
+  else go=`<div class="go gray"><b>아직 가까이 오는 버스 없음</b><span>5정거장 안에 버스가 들어오면 알려줄게</span></div>`;
+  $("busGo").innerHTML=go;
+  $("busGrid").innerHTML=cards.join("");
 }
 async function loadLive(){
   const url=DATA.bus&&DATA.bus.live; if(!url)return;
