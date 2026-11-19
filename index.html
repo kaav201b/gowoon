@@ -129,6 +129,20 @@ h2{font-size:18px}
 .bus-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:13px;border-radius:14px;background:var(--accent-soft);color:var(--accent);text-decoration:none;font-weight:700;font-size:15px}
 .bus-btn:active{filter:brightness(.97)}
 
+.live{margin-top:10px}
+.live:empty{display:none}
+.track{display:flex;align-items:center;gap:0;padding:4px 0}
+.track .st{width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid #c4cad1;flex:none;position:relative}
+.track .ln{flex:1;height:2px;background:#d1d6db;min-width:8px}
+.track .st.goal{width:14px;height:14px;border-color:var(--accent);border-width:3px}
+.track .st.bus{background:#f03e3e;border-color:#f03e3e;width:14px;height:14px;box-shadow:0 0 0 4px #ffe3e3}
+.track .gl{margin-left:6px;font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap}
+.lmsg{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--ink2);margin-top:4px}
+.lmsg i{width:8px;height:8px;border-radius:50%;background:#f03e3e;flex:none}
+.lmsg i.off{background:#c4cad1}
+.lmsg b{color:#f03e3e;font-weight:700}
+.lmsg span{color:var(--muted);font-size:12px;margin-left:2px}
+.lmsg em{font-style:normal;color:var(--muted)}
 /* 급식 */
 .strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:0 20px 2px;scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
@@ -281,7 +295,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-19",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -300,7 +314,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -323,7 +337,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -338,6 +352,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -350,6 +365,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -366,7 +382,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -728,55 +744,45 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-19",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
    "202": 15,
    "221": 15
   },
-  "gapLabel": "10~15"
+  "gapLabel": "10~15",
+  "live": "https://script.google.com/macros/s/AKfycbyt45BFakfCUQk4KtN6LVvun_LDXwrTCKtZhxiNPJD4Ovjvb1FdKgEGhkT3MQwTYdY/exec",
+  "lines": {
+   "202": [
+    "범지기마을4단지",
+    "아름동커뮤니티센터",
+    "대법원등기정보센터",
+    "국민건강보험공단",
+    "가락마을20,21단지"
+   ],
+   "221": [
+    "세종누리학교",
+    "두루초,중학교"
+   ]
+  }
  },
  "weather": {
-  "20261119": {
-   "min": -1,
-   "max": 6,
-   "am": -1,
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
    "sky": "3",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
    "pty": "0",
    "pop": 30
   },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -4,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 20
-  },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": -1,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  }
 };
@@ -881,11 +887,42 @@ function renderBus(){
       const done=schoolDay&&times.length&&!next;
       t=`${done?"<b>오늘 등교 시간대 버스는 끝났어</b>":""}<div class="bus-times">${chips}</div>`;
     }
-    return `<div class="bus-row"><div class="bus-no">${esc(r.no)}</div><div class="bus-t">${t}</div></div>`;}).join("");
+    return `<div class="bus-row"><div class="bus-no">${esc(r.no)}</div><div class="bus-t">${t}<div class="live" data-no="${esc(r.no)}"></div></div></div>`;}).join("");
+  drawLive();
   const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   $("busLink").href=(isMobile&&b.mlink)||b.link||("https://map.kakao.com/link/search/"+encodeURIComponent(b.from));
 }
 renderBus(); setInterval(renderBus,30000);
+
+
+// 실시간 버스 위치 (Google Apps Script 중계)
+var LIVE=null, liveAt=0, LIVE_ERR="";
+function drawLive(){
+  const lines=(DATA.bus&&DATA.bus.lines)||{}, MAXS=5;
+  document.querySelectorAll(".live").forEach(el=>{
+    if(!LIVE){el.innerHTML=(DATA.bus&&DATA.bus.live)?`<div class="lmsg"><i class="off"></i><em>${LIVE_ERR?`실시간 연결 안 됨 (${esc(LIVE_ERR)})`:"실시간 위치 불러오는 중…"}</em></div>`:"";return;}
+    const no=el.dataset.no, names=(lines[no]||[]).slice(-MAXS), n=names.length;
+    const r=(LIVE.routes||[]).find(x=>x.no===no);
+    const bs=(r?r.buses:[]).filter(b=>b.left<=n).sort((a,b)=>a.left-b.left);
+    const occ=new Set(bs.map(b=>b.left));
+    // 정류장 점: 왼쪽이 멀리, 오른쪽 끝이 두루중학교
+    let dots="";
+    for(let k=n;k>=1;k--) dots+=`<span class="st${occ.has(k)?" bus":""}" title="${esc(names[n-k])}"></span><span class="ln"></span>`;
+    dots+=`<span class="st goal${occ.has(0)?" bus":""}"></span>`;
+    const near=bs[0];
+    const msg=near?(near.left===0?`<b>지금 정류장에 도착</b>`:`<b>${near.left}정거장 전</b> · 약 ${Math.max(1,Math.round(near.left*STOP_MIN))}분 후 도착<span>${esc(near.at)}</span>`)
+                  :`<em>${n}정거장 안에 오는 버스 없음</em>`;
+    el.innerHTML=`<div class="track">${dots}<span class="gl">두루중</span></div><div class="lmsg"><i class="${near?"":"off"}"></i>${msg}</div>`;
+  });
+}
+async function loadLive(){
+  const url=DATA.bus&&DATA.bus.live; if(!url)return;
+  try{const r=await fetch(url,{cache:"no-store",redirect:"follow"});const j=await r.json();
+    if(j.error&&!(j.routes||[]).length){LIVE_ERR=j.error;LIVE=null;}else{LIVE=j;LIVE_ERR="";}liveAt=Date.now();}
+  catch(e){LIVE_ERR=e&&e.message?e.message:"접속 실패";}
+  drawLive();
+}
+loadLive(); setInterval(()=>{if(document.visibilityState==="visible")loadLive();},30000);
 
 // 일정
 (function(){
