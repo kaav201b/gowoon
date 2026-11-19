@@ -129,7 +129,7 @@ h2{font-size:18px}
 .bus-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:13px;border-radius:14px;background:var(--accent-soft);color:var(--accent);text-decoration:none;font-weight:700;font-size:15px}
 .bus-btn:active{filter:brightness(.97)}
 
-.live{margin-top:10px}
+.live{margin-top:0}
 .live:empty{display:none}
 .track{display:flex;align-items:center;gap:0;padding:4px 0}
 .track .st{width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid #c4cad1;flex:none;position:relative}
@@ -295,7 +295,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -314,7 +314,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -337,7 +337,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -352,6 +352,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -364,6 +365,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -380,7 +382,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -742,7 +744,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-20",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -760,51 +762,30 @@ const DATA = {
     "가락마을20,21단지"
    ],
    "221": [
-    "세종누리학교",
+    "가락초등학교",
+    "두루중학교 건너편",
+    "두루초,중학교 건너편",
+    "세종누리학교(회차)",
     "두루초,중학교"
    ]
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  }
 };
@@ -882,7 +863,7 @@ const QUOTES=[["천 리 길도 한 걸음부터", "속담"], ["시작이 반이�
 const STOP_MIN=1.5; // 정류장 한 칸당 예상 이동 시간(분) — 실제와 다를 수 있음
 function renderBus(){
   const b=DATA.bus; if(!b){$("sec-bus").hidden=true;return;}
-  $("busPath").innerHTML=`<b>${esc(b.from)}</b><span class="arr">→</span><b>${esc(b.to)}</b><span class="est">예상 시간</span>`;
+  $("busPath").innerHTML=`<b>${esc(b.from)}</b><span class="arr">→</span><b>${esc(b.to)}</b>`;
   const n=new Date(), nowM=n.getHours()*60+n.getMinutes()+n.getSeconds()/60, schoolDay=n.getDay()>=1&&n.getDay()<=5;
   const toM=x=>{const [h,m]=String(x||"").split(":").map(Number);return isNaN(h)?null:h*60+m;};
   const fmt=x=>`${Math.floor(x/60)}:${String(x%60).padStart(2,"0")}`;
@@ -896,19 +877,7 @@ function renderBus(){
   let best=null;
   if(schoolDay)rows.forEach(o=>o.times.forEach(x=>{if(x>=nowM&&(best==null||x<best.x))best={x,no:o.r.no};}));
   $("busList").innerHTML=rows.map(({r,g,times})=>{
-    let t;
-    if(r.ok===undefined) t='<small>노선 정보는 갱신 후 표시돼</small>';
-    else if(!r.ok) t='<small>이 구간을 지나는 노선 정보를 못 찾았어</small>';
-    else if(!(g>0)) t=`<b>첫차 ${r.first||"-"} · 막차 ${r.last||"-"}</b><small>기점 출발 기준</small>`;
-    else{
-      const next=schoolDay?times.find(x=>x>=nowM):undefined;
-      const chips=times.map(x=>{
-        const past=schoolDay&&x<nowM, isBest=best&&best.no===r.no&&best.x===x, isNext=x===next;
-        const left=Math.max(0,Math.ceil(x-nowM));
-        return `<span class="${past?"past":""}${isBest?" best":isNext?" next":""}">${fmt(x)}${isNext?`<em class="${left<=10?"hurry":""}">${left?left+"분 후":"곧 도착"}</em>`:""}</span>`;}).join("");
-      const done=schoolDay&&times.length&&!next;
-      t=`${done?"<b>오늘 등교 시간대 버스는 끝났어</b>":""}<div class="bus-times">${chips}</div>`;
-    }
+    const t="";
     return `<div class="bus-row"><div class="bus-no">${esc(r.no)}</div><div class="bus-t">${t}<div class="live" data-no="${esc(r.no)}"></div></div></div>`;}).join("");
   drawLive();
   const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -932,7 +901,9 @@ function drawLive(){
     for(let k=n;k>=1;k--) dots+=`<span class="st${occ.has(k)?" bus":""}" title="${esc(names[n-k])}"></span><span class="ln"></span>`;
     dots+=`<span class="st goal${occ.has(0)?" bus":""}"></span>`;
     const near=bs[0];
-    const msg=near?(near.left===0?`<b>지금 정류장에 도착</b>`:`<b>${near.left}정거장 전</b> · 약 ${Math.max(1,Math.round(near.left*STOP_MIN))}분 후 도착<span>${esc(near.at)}</span>`)
+    const mins=near?Math.max(1,Math.round(near.left*STOP_MIN)):0, at=new Date(Date.now()+mins*60000);
+    const hm=`${at.getHours()}:${String(at.getMinutes()).padStart(2,"0")}`;
+    const msg=near?(near.left===0?`<b>지금 정류장에 도착</b>`:`<b>${hm} 도착 예상</b> · 약 ${mins}분 후 · ${near.left}정거장 전<span>${esc(names[n-near.left]||near.at)}</span>`)
                   :`<em>${n}정거장 안에 오는 버스 없음</em>`;
     el.innerHTML=`<div class="track">${dots}<span class="gl">두루중</span></div><div class="lmsg"><i class="${near?"":"off"}"></i>${msg}</div>`;
   });
