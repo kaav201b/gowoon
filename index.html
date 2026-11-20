@@ -254,6 +254,60 @@ h2{font-size:18px}
 .ck ul{margin:0;padding:0;list-style:none}
 .ck li{position:relative;padding-left:20px}
 .ck li::before{content:"";position:absolute;left:2px;top:5px;width:11px;height:11px;border:1.5px solid #c4cad1;border-radius:3px}
+/* 수행: 마감 보드 + 단계 */
+.pg+.pg{margin-top:14px}
+.pg h3{display:flex;align-items:center;gap:6px;margin:0 0 6px;font-size:13px;font-weight:700;color:var(--ink2)}
+.pg h3 i{width:8px;height:8px;border-radius:50%}
+.pg.hot h3 i{background:#f03e3e}.pg.ing h3 i{background:#f59f00}.pg.fin h3 i{background:#12b886}
+.pg h3 span{font-size:12px;color:var(--muted);font-weight:600}
+.pi{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:6px;background:var(--surface);display:flex;flex-direction:column}
+.pi .pi-more{order:1}
+.pg.hot .pi{border-color:#ffc9c9;background:#fffafa}
+.pi-row{display:flex;align-items:center;gap:10px}
+.pi-main{flex:1;min-width:0;border:0;background:none;padding:0;text-align:left;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column}
+.pi-sub{font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px}
+.pi-sub::before{content:"";width:8px;height:8px;border-radius:3px;background:hsl(var(--h) 60% 55%)}
+.pi-tt{font-size:13px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pi-r{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:none}
+.pi-r em{font-style:normal;font-size:12px;font-weight:800;color:var(--ink2);font-variant-numeric:tabular-nums}
+.pi-r em.hot{color:#f03e3e}
+.pi-r small{font-size:11px;color:var(--muted)}
+.pi-prog{height:4px;border-radius:2px;background:var(--line);margin:8px 0 0 36px;overflow:hidden}
+.pi-prog i{display:block;height:100%;background:#7048e8;border-radius:2px}
+.pi-more{display:none;margin:10px 0 2px 36px}
+.pi.open .pi-more{display:block}
+.pi.done{opacity:.55}.pi.done .pi-tt{text-decoration:line-through}
+.steps{display:flex;align-items:center;gap:0;margin-bottom:8px}
+.stp{border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:3px;font:600 11px var(--font);color:var(--muted);cursor:pointer;flex:none}
+.stp b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:2px solid #d1d6db;color:var(--muted);font-size:12px;background:var(--surface)}
+.stp.on{color:#7048e8}.stp.on b{background:#7048e8;border-color:#7048e8;color:#fff}
+.steps .sl{flex:1;height:2px;background:var(--line);margin:0 2px 16px;min-width:8px}
+.pi-period{font-size:12px;color:var(--muted);margin:0 0 8px}
+.pi-more .tip,.pi-more .lv,.pi-more .ck{margin-top:6px}
+.pi-tog{display:flex;align-items:center;justify-content:center;gap:4px;width:calc(100% - 36px);margin:8px 0 0 36px;padding:7px 0;border:0;border-radius:10px;background:var(--fill);color:#7048e8;font:600 12px var(--font);cursor:pointer}
+.pi-tog svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.pi.open .pi-tog{background:#f3f0ff}
+.pi.open .pi-tog svg{transform:rotate(180deg)}
+.pi.open .pi-tog{order:2}
+.pi.done .pi-tog{display:none}
+.pi-r{cursor:pointer}
+.pi:active{transform:scale(.995)}
+.pm-chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.cp{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--ink2);background:var(--fill);border:1px solid var(--line);border-radius:8px;padding:3px 8px;font-variant-numeric:tabular-nums}
+.cp svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
+.cp.hot{color:#e03131;border-color:#ffc9c9;background:#fff5f5}
+.pm{display:grid;grid-template-columns:52px 1fr;gap:10px 10px;margin:0;padding:12px;border-radius:12px;background:var(--fill)}
+.pm dt{font-size:11px;font-weight:700;color:var(--muted);padding-top:2px}
+.pm dd{margin:0;font-size:13px;line-height:1.5;color:var(--ink)}
+.pm .kw{display:block;color:#e03131;font-size:12px;font-weight:800;margin-bottom:1px}
+.pm .sub{display:block;font-size:12px;line-height:1.55;color:var(--ink2);margin-top:6px;padding:7px 9px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
+.pm .sub b{font-weight:800;color:var(--ink)}
+.pm .cl{display:flex;flex-direction:column;gap:4px}
+.ci{display:flex;align-items:center;gap:8px;border:0;background:none;padding:2px 0;font:500 13px var(--font);color:var(--ink);text-align:left;cursor:pointer}
+.ci i{width:16px;height:16px;border-radius:5px;border:1.5px solid #c4cad1;flex:none;display:grid;place-items:center;background:var(--surface)}
+.ci.on{color:var(--muted);text-decoration:line-through}
+.ci.on i{background:#7048e8;border-color:#7048e8}
+.ci.on i::after{content:"";width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
 /* 하단 탭바 */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0))}
 .tabbar nav{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
@@ -316,7 +370,6 @@ html,body{overscroll-behavior-y:contain}
   <section class="card" id="sec-tt">
     <div class="card-h"><h2><i style="--c:#2f6bff"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 10h16M10 4v16"/></svg></i>이번 주 시간표</h2><span id="ttRange"></span></div>
     <table class="tt" id="tt"></table>
-    <div class="legend"><i></i>수행 주간</div>
   </section>
 
   <section class="card" id="sec-bus">
@@ -361,7 +414,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -380,7 +433,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -403,7 +456,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -418,6 +471,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -430,6 +484,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -446,7 +501,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -495,7 +550,14 @@ const DATA = {
       "배운 단원 개념이 문제에 정확히 들어갔나",
       "풀이 과정을 단계별로 빠짐없이 썼나",
       "직접 풀어서 답이 하나로 나오는지 검산했나"
-     ]
+     ],
+     "as": "도형의 방정식·명제·함수 개념을 정확히 쓰고, 실생활 상황을 수학 문제로 바꿔 해결",
+     "cs": [
+      "단원 개념 반영",
+      "풀이 과정 빠짐없이",
+      "답이 하나인지 검산"
+     ],
+     "ts": "예: 동네 지도를 좌표로 놓고 거리·대칭이동 문제 만들기 → 직접 풀어서 답이 하나인지 검산"
     }
    ],
    [
@@ -510,7 +572,14 @@ const DATA = {
       "쟁점의 찬성·반대 근거를 모두 조사했나",
       "주장마다 자료·통계 같은 증거를 붙였나",
       "과학 윤리가 필요한 이유를 내 말로 결론지었나"
-     ]
+     ],
+     "as": "과학기술의 장단점을 자료로 따져 보고, 과학 윤리가 왜 필요한지 객관적 근거로 주장",
+     "cs": [
+      "찬반 근거 모두 조사",
+      "주장마다 자료·통계",
+      "윤리가 필요한 이유로 결론"
+     ],
+     "ts": "주제 1개(예: 유전자 편집, AI) → 찬성 근거 2개 · 반대 근거 2개 → 출처 있는 자료로 결론"
     }
    ],
    [
@@ -525,7 +594,14 @@ const DATA = {
       "분석할 실제 사례(나라·기업)를 하나 정했나",
       "시장·정부·기업·소비자의 역할을 나눠 분석했나",
       "경제 원리를 근거로 실천 방안을 제시했나"
-     ]
+     ],
+     "as": "시장(수요·공급)과 정부(규제·세금·보조금)의 역할을 나눠 분석하고, 그 원리로 지속가능발전 방안 제시",
+     "cs": [
+      "사례(나라·기업) 1개 선정",
+      "시장·정부·기업·소비자 역할",
+      "원리를 근거로 실천 방안"
+     ],
+     "ts": "예: 전기차 보조금·탄소세 같은 사례 1개를 골라, 판매량·배출량 등 통계 1~2개로 효과 보여주기"
     }
    ],
    [
@@ -540,7 +616,14 @@ const DATA = {
       "문제를 작은 단계로 나눠 설계했나",
       "여러 입력값으로 실행해 오류가 없는지 확인했나",
       "주석으로 설명을 달고 개선할 점을 정리했나"
-     ]
+     ],
+     "as": "문제를 작은 단계로 나눠 효율적으로 설계하고, 리스트·함수·클래스를 활용해 작성한 뒤 결과를 평가",
+     "cs": [
+      "문제를 단계로 분해",
+      "여러 입력으로 테스트",
+      "주석·개선점 정리"
+     ],
+     "ts": "입력값 3가지 이상으로 테스트하고, 핵심 줄마다 '왜 이렇게 했는지' 주석 달기"
     }
    ],
    [
@@ -555,7 +638,14 @@ const DATA = {
       "결석이 많지 않은지 확인했나",
       "보고서에 환경·경제·사회 세 관점이 들어갔나",
       "캠페인 활동 사진이나 기록을 남겼나"
-     ]
+     ],
+     "as": "출석 2/3 이상이면 통과. 환경 문제를 환경·경제·사회 세 관점으로 보고 직접 실천하기",
+     "cs": [
+      "결석 일수 확인",
+      "환경·경제·사회 세 관점",
+      "캠페인 사진·기록"
+     ],
+     "ts": "보고서는 문제 → 원인 → 세 관점 분석 → 우리 학교 실천안 순서로, 캠페인은 사진·참여 기록 남기기"
     }
    ],
    [
@@ -570,7 +660,14 @@ const DATA = {
       "주제와 계획 스케치를 남겼나",
       "재료·매체를 실험한 과정을 기록했나",
       "완성 후 잘된 점·아쉬운 점을 정리했나"
-     ]
+     ],
+     "as": "주제를 나만의 방식으로 확장하고, 새로운 재료·매체를 실험해 표현하며, 과정을 돌아보고 반영",
+     "cs": [
+      "주제·계획 스케치",
+      "재료 실험 과정 기록",
+      "완성 후 성찰 메모"
+     ],
+     "ts": "아이디어 스케치 → 재료 실험 2가지 이상 → 완성 → 잘된 점·아쉬운 점 메모, 단계마다 사진 남기기"
     }
    ]
   ],
@@ -587,7 +684,14 @@ const DATA = {
       "분쟁의 배경과 원인을 여러 측면에서 정리했나",
       "국가·국제기구·NGO 등 행위 주체의 역할을 적었나",
       "평화적인 해결 방안을 구체적으로 제안했나"
-     ]
+     ],
+     "as": "분쟁 원인(영토·자원·민족·종교)을 여러 측면에서 분석하고, 평화 관점에서 현실적인 해결책 제안",
+     "cs": [
+      "배경·원인 여러 측면",
+      "국가·국제기구·NGO 역할",
+      "평화적 해결책 구체적으로"
+     ],
+     "ts": "분쟁 1개를 골라 배경 → 원인 → 관련 국가·국제기구 역할 → 해결책 순서로 쓰기"
     }
    ],
    [
@@ -602,7 +706,14 @@ const DATA = {
       "라켓 각도와 힘 조절 원리를 이해했나",
       "네트 바로 너머에 떨어지게 반복 연습했나",
       "하이클리어와 섞어 쓰는 상황을 생각해 봤나"
-     ]
+     ],
+     "as": "드롭의 원리(라켓 각도·힘 조절)를 이해해 동작을 고치고, 경기 상황에 맞게 하이클리어와 섞어 사용",
+     "cs": [
+      "라켓 각도·힘 조절",
+      "네트 너머 반복 연습",
+      "하이클리어와 섞어 쓰기"
+     ],
+     "ts": "라켓 면을 살짝 눕히고 손목 힘 빼기 → 네트 바로 너머 1m 안에 떨어지게 10회씩 연습"
     }
    ],
    [
@@ -617,7 +728,14 @@ const DATA = {
       "빠르기·셈여림·악기 등 음악 요소를 분석했나",
       "곡의 시대·문화 배경을 조사했나",
       "내 평가를 근거와 함께 썼나"
-     ]
+     ],
+     "as": "빠르기·셈여림·음색 같은 음악 요소를 분석하고, 곡의 시대·문화적 배경과 연결해 비평",
+     "cs": [
+      "빠르기·셈여림·악기 분석",
+      "시대·문화 배경 조사",
+      "내 평가 + 근거"
+     ],
+     "ts": "곡 정보 → 들은 음악 요소 3가지(예: 점점 빨라짐) → 시대 배경 → 내 평가와 이유 순서로 쓰기"
     }
    ],
    [
@@ -632,7 +750,14 @@ const DATA = {
       "배운 단원 개념이 문제에 정확히 들어갔나",
       "풀이 과정을 단계별로 빠짐없이 썼나",
       "직접 풀어서 답이 하나로 나오는지 검산했나"
-     ]
+     ],
+     "as": "도형의 방정식·명제·함수 개념을 정확히 쓰고, 실생활 상황을 수학 문제로 바꿔 해결",
+     "cs": [
+      "단원 개념 반영",
+      "풀이 과정 빠짐없이",
+      "답이 하나인지 검산"
+     ],
+     "ts": "예: 동네 지도를 좌표로 놓고 거리·대칭이동 문제 만들기 → 직접 풀어서 답이 하나인지 검산"
     }
    ],
    [
@@ -647,7 +772,14 @@ const DATA = {
       "쟁점의 찬성·반대 근거를 모두 조사했나",
       "주장마다 자료·통계 같은 증거를 붙였나",
       "과학 윤리가 필요한 이유를 내 말로 결론지었나"
-     ]
+     ],
+     "as": "과학기술의 장단점을 자료로 따져 보고, 과학 윤리가 왜 필요한지 객관적 근거로 주장",
+     "cs": [
+      "찬반 근거 모두 조사",
+      "주장마다 자료·통계",
+      "윤리가 필요한 이유로 결론"
+     ],
+     "ts": "주제 1개(예: 유전자 편집, AI) → 찬성 근거 2개 · 반대 근거 2개 → 출처 있는 자료로 결론"
     }
    ],
    [
@@ -662,7 +794,14 @@ const DATA = {
       "문제를 작은 단계로 나눠 설계했나",
       "여러 입력값으로 실행해 오류가 없는지 확인했나",
       "주석으로 설명을 달고 개선할 점을 정리했나"
-     ]
+     ],
+     "as": "문제를 작은 단계로 나눠 효율적으로 설계하고, 리스트·함수·클래스를 활용해 작성한 뒤 결과를 평가",
+     "cs": [
+      "문제를 단계로 분해",
+      "여러 입력으로 테스트",
+      "주석·개선점 정리"
+     ],
+     "ts": "입력값 3가지 이상으로 테스트하고, 핵심 줄마다 '왜 이렇게 했는지' 주석 달기"
     }
    ],
    [
@@ -677,7 +816,14 @@ const DATA = {
       "결석이 많지 않은지 확인했나",
       "보고서에 환경·경제·사회 세 관점이 들어갔나",
       "캠페인 활동 사진이나 기록을 남겼나"
-     ]
+     ],
+     "as": "출석 2/3 이상이면 통과. 환경 문제를 환경·경제·사회 세 관점으로 보고 직접 실천하기",
+     "cs": [
+      "결석 일수 확인",
+      "환경·경제·사회 세 관점",
+      "캠페인 사진·기록"
+     ],
+     "ts": "보고서는 문제 → 원인 → 세 관점 분석 → 우리 학교 실천안 순서로, 캠페인은 사진·참여 기록 남기기"
     }
    ],
    [
@@ -692,7 +838,14 @@ const DATA = {
       "주제와 계획 스케치를 남겼나",
       "재료·매체를 실험한 과정을 기록했나",
       "완성 후 잘된 점·아쉬운 점을 정리했나"
-     ]
+     ],
+     "as": "주제를 나만의 방식으로 확장하고, 새로운 재료·매체를 실험해 표현하며, 과정을 돌아보고 반영",
+     "cs": [
+      "주제·계획 스케치",
+      "재료 실험 과정 기록",
+      "완성 후 성찰 메모"
+     ],
+     "ts": "아이디어 스케치 → 재료 실험 2가지 이상 → 완성 → 잘된 점·아쉬운 점 메모, 단계마다 사진 남기기"
     }
    ]
   ],
@@ -709,7 +862,14 @@ const DATA = {
       "배운 단원 개념이 문제에 정확히 들어갔나",
       "풀이 과정을 단계별로 빠짐없이 썼나",
       "직접 풀어서 답이 하나로 나오는지 검산했나"
-     ]
+     ],
+     "as": "도형의 방정식·명제·함수 개념을 정확히 쓰고, 실생활 상황을 수학 문제로 바꿔 해결",
+     "cs": [
+      "단원 개념 반영",
+      "풀이 과정 빠짐없이",
+      "답이 하나인지 검산"
+     ],
+     "ts": "예: 동네 지도를 좌표로 놓고 거리·대칭이동 문제 만들기 → 직접 풀어서 답이 하나인지 검산"
     }
    ],
    [
@@ -724,7 +884,14 @@ const DATA = {
       "쟁점의 찬성·반대 근거를 모두 조사했나",
       "주장마다 자료·통계 같은 증거를 붙였나",
       "과학 윤리가 필요한 이유를 내 말로 결론지었나"
-     ]
+     ],
+     "as": "과학기술의 장단점을 자료로 따져 보고, 과학 윤리가 왜 필요한지 객관적 근거로 주장",
+     "cs": [
+      "찬반 근거 모두 조사",
+      "주장마다 자료·통계",
+      "윤리가 필요한 이유로 결론"
+     ],
+     "ts": "주제 1개(예: 유전자 편집, AI) → 찬성 근거 2개 · 반대 근거 2개 → 출처 있는 자료로 결론"
     }
    ],
    [
@@ -739,7 +906,14 @@ const DATA = {
       "결석이 많지 않은지 확인했나",
       "보고서에 환경·경제·사회 세 관점이 들어갔나",
       "캠페인 활동 사진이나 기록을 남겼나"
-     ]
+     ],
+     "as": "출석 2/3 이상이면 통과. 환경 문제를 환경·경제·사회 세 관점으로 보고 직접 실천하기",
+     "cs": [
+      "결석 일수 확인",
+      "환경·경제·사회 세 관점",
+      "캠페인 사진·기록"
+     ],
+     "ts": "보고서는 문제 → 원인 → 세 관점 분석 → 우리 학교 실천안 순서로, 캠페인은 사진·참여 기록 남기기"
     }
    ],
    [
@@ -754,7 +928,14 @@ const DATA = {
       "주제와 계획 스케치를 남겼나",
       "재료·매체를 실험한 과정을 기록했나",
       "완성 후 잘된 점·아쉬운 점을 정리했나"
-     ]
+     ],
+     "as": "주제를 나만의 방식으로 확장하고, 새로운 재료·매체를 실험해 표현하며, 과정을 돌아보고 반영",
+     "cs": [
+      "주제·계획 스케치",
+      "재료 실험 과정 기록",
+      "완성 후 성찰 메모"
+     ],
+     "ts": "아이디어 스케치 → 재료 실험 2가지 이상 → 완성 → 잘된 점·아쉬운 점 메모, 단계마다 사진 남기기"
     }
    ]
   ],
@@ -771,7 +952,14 @@ const DATA = {
       "주제와 계획 스케치를 남겼나",
       "재료·매체를 실험한 과정을 기록했나",
       "완성 후 잘된 점·아쉬운 점을 정리했나"
-     ]
+     ],
+     "as": "주제를 나만의 방식으로 확장하고, 새로운 재료·매체를 실험해 표현하며, 과정을 돌아보고 반영",
+     "cs": [
+      "주제·계획 스케치",
+      "재료 실험 과정 기록",
+      "완성 후 성찰 메모"
+     ],
+     "ts": "아이디어 스케치 → 재료 실험 2가지 이상 → 완성 → 잘된 점·아쉬운 점 메모, 단계마다 사진 남기기"
     }
    ]
   ]
@@ -808,7 +996,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-20",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -841,45 +1029,21 @@ const DATA = {
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  }
 };
@@ -1092,7 +1256,7 @@ const EVI={
       if(isExamDay(k)){if(p===0)h+=`<td class="off exam${cls(k)}" rowspan="${max}">수능<br>수업<br>없음</td>`;return;}
       if(!tt.length){if(p===0)h+=`<td class="off${cls(k)}" rowspan="${max}">쉬는 날</td>`;return;}
       const s=tt[p];
-      h+=s?`<td class="${paSet.has(clean(s))?"pa":""}${cls(k)}${p===max-1?" last":""}${p===0?" first":""}" style="--h:${hue(s)}">${esc(short(s))}</td>`:`<td class="empty${cls(k)}"></td>`;
+      h+=s?`<td class="${cls(k)}${p===max-1?" last":""}${p===0?" first":""}" style="--h:${hue(s)}">${esc(short(s))}</td>`:`<td class="empty${cls(k)}"></td>`;
     });
     h+="</tr>";
   }
@@ -1112,39 +1276,82 @@ const FAV=/치킨|닭강정|떡볶이|피자|돈[까가]스|햄버거|버거|스
   if(t)requestAnimationFrame(()=>{$("meal").scrollLeft=t.offsetLeft-16;});
 })();
 
-// 수행 체크 (내 폰에만 저장)
+// 수행 체크 (내 폰에만 저장) — 마감 보드 + 단계 진행
 (function(){
-  let done={};try{done=JSON.parse(localStorage.getItem("paDone")||"{}")}catch(_){}
+  let done={},steps={};
+  try{done=JSON.parse(localStorage.getItem("paDone")||"{}");steps=JSON.parse(localStorage.getItem("paSteps")||"{}");}catch(_){}
+  const save=()=>{try{localStorage.setItem("paDone",JSON.stringify(done));localStorage.setItem("paSteps",JSON.stringify(steps));}catch(_){}};
   const id=x=>weekStart+"|"+x[0]+"|"+x[1];
-  // 이번 주가 무슨 '○월 ○주'인지 (그 달 첫 평일이 든 주 = 1주)
-  const wkLabels=(()=>{const set=new Set(),ws=toD(weekStart);
-    for(let i=0;i<5;i++){const d=new Date(ws);d.setDate(d.getDate()+i);const m=d.getMonth()+1;
-      let f=new Date(d.getFullYear(),d.getMonth(),1);while(f.getDay()===0||f.getDay()===6)f.setDate(f.getDate()+1);
-      const fm=new Date(f);fm.setDate(f.getDate()-((f.getDay()+6)%7));set.add(m+"-"+(Math.round((ws-fm)/6048e5)+1));
-      const nx=new Date(d);nx.setDate(d.getDate()+1);if(nx.getMonth()!==d.getMonth()||i===4){/* 마지막 평일 체크용 */}
-    }return set;})();
-  const lastWeekOf=m=>{const ws=toD(weekStart),we=new Date(ws);we.setDate(ws.getDate()+4);
-    let l=new Date(ws.getFullYear(),m,0);while(l.getDay()===0||l.getDay()===6)l.setDate(l.getDate()-1);return l>=ws&&l<=we;};
-  const dueNow=x=>{const all=[...x[1].matchAll(/(\d+)월\s*(\d+)(?:~(\d+))?\s*주/g)];
-    if(all.length){const g=all[all.length-1];return wkLabels.has(+g[1]+"-"+(+(g[3]||g[2])));}
-    const mo=[...x[1].matchAll(/~\s*(\d+)월/g)];return mo.length?lastWeekOf(+mo[mo.length-1][1]):false;};
+  const STEPS=["준비","작성","점검","제출"];
+  const TIPS={"검산 필수":"직접 풀어서 답이 하나인지 확인","양쪽 근거":"찬반 근거 모두, 결론은 과학으로","사례 + 통계":"실제 사례 1개 + 통계로 뒷받침",
+    "실행 확인 · 주석":"제출 전 실행, 주석 달기","출석 2/3":"출석 2/3 이상이면 통과","과정 사진":"완성작 + 제작 과정 사진","원인 → 해결책":"원인을 나누고 해결책까지",
+    "손목 힘 빼기":"네트 바로 너머로 떨어뜨리기","음악 요소로 근거":"느낌 말고 음악 요소로 근거","이모티콘 먼저":"이모티콘은 11월 마감, 먼저 끝내기",
+    "마감 주간":"풀이 과정 최종 점검","출처 표시":"출처 표시까지 마지막 점검","활동 기록":"캠페인 사진·기록 남기기","시험 전 진도":"시험 전에 진도 최대한","완성작 사진":"시험 후 마무리, 완성작 사진"};
+  const IC={cal:'<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
+    pie:'<svg viewBox="0 0 24 24"><path d="M12 3v9h9A9 9 0 1 1 12 3z"/></svg>',clk:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'};
+  // 'N월 M주' → 그 주 금요일 (그 달 첫 평일이 든 주 = 1주)
+  const firstMon=(y,m)=>{let f=new Date(y,m-1,1);while(f.getDay()===0||f.getDay()===6)f.setDate(f.getDate()+1);const r=new Date(f);r.setDate(f.getDate()-((f.getDay()+6)%7));return r;};
+  const yr=toD(weekStart).getFullYear();
+  const fri=(m,w)=>{const y=m<toD(weekStart).getMonth()+1-6?yr+1:yr;const d=firstMon(y,m);d.setDate(d.getDate()+(w-1)*7+4);return d;};
+  const lastWd=m=>{const y=m<toD(weekStart).getMonth()+1-6?yr+1:yr;let l=new Date(y,m,0);while(l.getDay()===0||l.getDay()===6)l.setDate(l.getDate()-1);return l;};
+  const deadline=x=>{const a=[...x[1].matchAll(/(\d+)월\s*(\d+)(?:~(\d+))?\s*주/g)];
+    if(a.length){const g=a[a.length-1];return fri(+g[1],+(g[3]||g[2]));}
+    const mo=[...x[1].matchAll(/~\s*(\d+)월/g)];return mo.length?lastWd(+mo[mo.length-1][1]):null;};
+  const ws=toD(weekStart), we=new Date(ws);we.setDate(ws.getDate()+4);
   function ring(dn,tot){const r=15,c=2*Math.PI*r,p=tot?dn/tot:0;
     return `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="${r}" fill="none" stroke="#eceaf8" stroke-width="5"/><circle cx="20" cy="20" r="${r}" fill="none" stroke="#7048e8" stroke-width="5" stroke-linecap="round" stroke-dasharray="${c*p} ${c}" transform="rotate(-90 20 20)"/></svg><b>${dn}/${tot}</b><span>${dn===tot&&tot?"다 했다!":"완료"}</span>`;}
-  function draw(){
-    const dn=paList.filter(x=>done[id(x)]).length;
-    $("paRing").innerHTML=paList.length?ring(dn,paList.length):"";
-    const order=paList.map((x,i)=>({x,i,due:dueNow(x),d:!!done[id(x)]})).sort((a,b)=>(a.d-b.d)||(b.due-a.due)||(a.i-b.i));
-    $("pa").innerHTML=paList.length?order.map(({x,i,due})=>{const dt=x[5]||{};return `<div class="pa-item ${done[id(x)]?"done":""}" style="--h:${hue(x[0])}">
-      <input type="checkbox" class="chk" id="pa${i}" data-i="${i}" ${done[id(x)]?"checked":""} aria-label="${esc(x[0])} 완료">
-      <div><label for="pa${i}" class="pa-head"><span class="subj">${esc(x[0])}${due&&!done[id(x)]?'<em class="due">이번 주 마감</em>':""}</span>${x[4]?`<span class="meta">${esc(x[4])}</span>`:""}</label>
-      <div class="pa-name">${esc(x[1])}</div>${x[2]?`<div class="tip">${x[3]?`<b>${esc(x[3])}</b>`:""}${esc(x[2])}</div>`:""}
-      ${dt.a||dt.chk?`<details class="more"><summary>자세히 보기</summary>
-        ${dt.a?`<div class="lv"><b>${x[0]==="생태와 환경"?"통과 포인트":"A 포인트"}</b>${esc(dt.a)}</div>`:""}
-        ${dt.chk?`<div class="ck"><b>제출 전 체크</b><ul>${dt.chk.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>`:""}
-      </details>`:""}</div></div>`;}).join("")
-      :'<div class="nomeal">이번 주는 수행평가 없어. 시험 공부 집중!</div>';
+  const open=new Set(); let firstOpen=true;
+  function item(o){
+    const {x,i,dl,dd}=o, k=id(x), st=steps[k]||[], cnt=STEPS.filter((_,n)=>st[n]).length, isDone=!!done[k], dt=x[5]||{};
+    const pct=isDone?100:Math.round(cnt/STEPS.length*100);
+    const ddTxt=dl?(dd>0?`D-${dd}`:(dd===0?"D-day":"마감 지남")):"";
+    const title=x[1].replace(/\s*[·(].*$/,"");
+    return `<div class="pi ${isDone?"done":""}${open.has(k)?" open":""}" style="--h:${hue(x[0])}" data-k="${esc(k)}">
+      <div class="pi-row">
+        <input type="checkbox" class="chk" data-a="done" data-i="${i}" ${isDone?"checked":""} aria-label="${esc(x[0])} 완료">
+        <button type="button" class="pi-main" data-a="tog" data-i="${i}" aria-expanded="${open.has(k)}">
+          <span class="pi-sub">${esc(x[0])}</span><span class="pi-tt">${esc(title)}</span>
+        </button>
+        <span class="pi-r" data-a="tog" data-i="${i}">${ddTxt?`<em class="${dd<=3?"hot":""}">${ddTxt}</em>`:""}<small>${esc(x[4]||"")}</small></span>
+      </div>
+      <div class="pi-prog"><i style="width:${pct}%"></i></div>
+      <button type="button" class="pi-tog" data-a="tog" data-i="${i}" aria-expanded="${open.has(k)}"><span>${open.has(k)?"접기":`단계 체크 · 팁 보기${cnt&&!isDone?` (${cnt}/4)`:""}`}</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="pi-more">
+        <div class="steps">${STEPS.map((nm,n)=>`<button type="button" class="stp${(st[n]||isDone)?" on":""}" data-a="step" data-i="${i}" data-n="${n}"><b>${(st[n]||isDone)?"✓":n+1}</b>${nm}</button>`).join('<span class="sl"></span>')}</div>
+        <div class="pm-chips">
+          ${dl?`<span class="cp ${dd<=3?"hot":""}">${IC.cal}${dl.getMonth()+1}.${dl.getDate()}.(금) 무렵</span>`:""}
+          ${x[4]?`<span class="cp">${IC.pie}${esc(x[4])}</span>`:""}
+          <span class="cp">${IC.clk}${esc((x[1].match(/\d+월[^·]*$/)||x[1].match(/~?\d+월[^)]*/)||[""])[0].replace(/[()]/g,"").trim())}</span>
+        </div>
+        <dl class="pm">
+          <dt>${x[0]==="생태와 환경"?"통과":"A 포인트"}</dt><dd><b class="kw">${esc(x[3]||"")}</b>${esc(dt.as||dt.a||"")}<span class="sub">${esc(dt.ts||TIPS[x[3]]||x[2]||"").replace(/^예:/,"<b>예:</b>")}</span></dd>
+          <dt>체크</dt><dd class="cl">${(dt.cs||dt.chk||[]).map((c,n)=>`<button type="button" class="ci${(steps[k+"|c"]||[])[n]?" on":""}" data-a="ck" data-i="${i}" data-n="${n}"><i></i>${esc(c)}</button>`).join("")}</dd>
+        </dl>
+      </div>
+    </div>`;
   }
-  $("pa").addEventListener("change",e=>{const x=paList[e.target.dataset.i];if(!x)return;done[id(x)]=e.target.checked;try{localStorage.setItem("paDone",JSON.stringify(done))}catch(_){}draw();});
+  function draw(){
+    if(!paList.length){$("pa").innerHTML='<div class="nomeal">이번 주는 수행평가 없어. 시험 공부 집중!</div>';$("paRing").innerHTML="";return;}
+    const all=paList.map((x,i)=>{const dl=deadline(x);const dd=dl?Math.round((dl-today0)/864e5):null;
+      return {x,i,dl,dd,due:dl&&dl>=ws&&dl<=we,done:!!done[id(x)]};});
+    const dn=all.filter(o=>o.done).length;
+    $("paRing").innerHTML=ring(dn,all.length);
+    const by=f=>all.filter(f).sort((a,b)=>(a.dl||9e15)-(b.dl||9e15));
+    const G=[["hot","이번 주 마감",by(o=>!o.done&&o.due)],["ing","진행 중",by(o=>!o.done&&!o.due)],["fin","완료",by(o=>o.done)]];
+    if(firstOpen){firstOpen=false;const f=(G[0][2][0]||G[1][2][0]);if(f)open.add(id(f.x));}
+    $("pa").innerHTML=G.filter(g=>g[2].length).map(([c,t,l])=>`<div class="pg ${c}"><h3><i></i>${t}<span>${l.length}</span></h3>${l.map(item).join("")}</div>`).join("");
+  }
+  $("pa").addEventListener("click",e=>{
+    const b=e.target.closest("[data-a]");if(!b)return;const x=paList[+b.dataset.i];if(!x)return;const k=id(x);
+    if(b.dataset.a==="tog"){open.has(k)?open.delete(k):open.add(k);draw();return;}
+    if(b.dataset.a==="ck"){const ck=steps[k+"|c"]||[];ck[+b.dataset.n]=!ck[+b.dataset.n];steps[k+"|c"]=ck;save();draw();return;}
+    if(b.dataset.a==="step"){const st=steps[k]||[false,false,false,false];const n=+b.dataset.n;st[n]=!st[n];steps[k]=st;
+      if(st.every(Boolean))done[k]=true;else if(done[k])done[k]=false;save();draw();return;}
+  });
+  $("pa").addEventListener("change",e=>{
+    const b=e.target;if(b.dataset.a!=="done")return;const x=paList[+b.dataset.i];if(!x)return;const k=id(x);
+    done[k]=b.checked;if(b.checked)steps[k]=[true,true,true,true];save();draw();
+  });
   draw();
 })();
 
