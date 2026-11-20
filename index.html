@@ -66,8 +66,10 @@ h2{font-size:18px}
 .wx .t b{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
 .wx .t span{font-size:11px;opacity:.85;font-variant-numeric:tabular-nums;white-space:nowrap}
 .umb{margin-top:-4px;font-size:13px;font-weight:600;color:#fff;background:rgba(255,255,255,.18);padding:9px 12px;border-radius:12px}
-.quote{font-size:14px;color:rgba(255,255,255,.92);line-height:1.55;padding-left:10px;border-left:2px solid rgba(255,255,255,.5)}
-.quote small{display:block;font-size:12px;color:rgba(255,255,255,.7);margin-top:2px}
+.quote{font-size:13px;color:rgba(255,255,255,.85);line-height:1.55;display:flex;gap:8px;align-items:flex-start;padding-top:12px;border-top:1px solid rgba(255,255,255,.2)}
+.quote .qi{width:16px;height:16px;flex:none;margin-top:2px;stroke:rgba(255,255,255,.7);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.quote small{display:inline;font-size:11px;color:rgba(255,255,255,.65);margin-left:6px}
+
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .stat{text-align:center;padding:10px 4px;background:rgba(255,255,255,.14);border-radius:14px}
 .stat .num{font-size:22px;font-weight:700;line-height:1.2;display:block}
@@ -88,6 +90,12 @@ h2{font-size:18px}
 .ev-row b{display:block;font-size:15px;font-weight:600}
 .ev-row p{margin:2px 0 0;font-size:13px;color:var(--muted)}
 .ev-row.exam b{color:#f03e3e}
+.ev-row b{display:flex;align-items:center;gap:6px}
+.evi{display:inline-grid;place-items:center;width:20px;height:20px;flex:none}
+.evi svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.8}
+.exbar{margin-top:8px;height:6px;border-radius:3px;background:#ffe3e3;overflow:hidden}
+.exbar i{display:block;height:100%;border-radius:3px;background:#f03e3e}
+.ev-row p.exl{font-size:11px;margin-top:4px}
 
 /* 시간표 */
 .tt{width:100%;border-collapse:separate;border-spacing:3px;table-layout:fixed;margin:-3px}
@@ -102,6 +110,10 @@ h2{font-size:18px}
 .tt td.off{background:var(--fill);color:var(--muted);font-size:12px}
 .tt td.off.exam{background:#fff;border:1px solid #ffc9c9;color:#f03e3e;font-weight:700}
 .tt td.pa::after{content:"";position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--hot)}
+.tt td{font-size:14px;font-weight:700}
+.tt td.dim,.tt th.dim{opacity:.45}
+.tt td.tday{box-shadow:inset 0 0 0 2px var(--accent)}
+.tt th.tday .num{background:var(--accent);color:#fff}
 .tt .pnum{font-size:11px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
 .legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:12px}
 .legend i{width:6px;height:6px;border-radius:50%;background:var(--hot)}
@@ -165,6 +177,7 @@ h2{font-size:18px}
 .bar i{display:block;height:100%;border-radius:3px;background:currentColor}
 .bc-s{font-size:12px;color:var(--ink2);font-weight:600}
 .bc-s span{display:block;font-weight:400;color:var(--muted);font-size:11px}
+.bc.far{opacity:.5}
 .bc.green{color:#0ca678}.bc.amber{color:#f76707}.bc.red{color:#f03e3e}.bc.none{color:#c4cad1}
 .bc .bc-s,.bc .bc-at{color:var(--ink2)}
 .bc.none .bc-s{color:var(--muted)}
@@ -172,7 +185,11 @@ h2{font-size:18px}
 .strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:0 20px 2px;scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
 .mday{flex:0 0 31%;min-width:108px;max-width:140px;scroll-snap-align:start;border-radius:14px;padding:12px 10px;background:var(--fill);border:1px solid transparent}
-.mday.today{background:var(--accent-soft);border-color:var(--accent)}
+.mday.today{background:var(--accent-soft);border-color:var(--accent);flex-basis:56%;max-width:220px}
+.mday.today .meal li{font-size:14px}
+.mday.today .meal li:first-child{font-size:17px}
+.mday h3 .nx{font-style:normal;font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:6px;padding:1px 6px;margin-left:auto}
+.meal li.fav::before{content:"★";color:#f59f00;margin-right:3px;font-size:.9em}
 .mday h3{margin:0 0 8px;font-size:15px;font-weight:700;display:flex;align-items:baseline;gap:4px}
 .mday.today h3{color:var(--accent)}
 .mday h3 small{font-size:11px;color:var(--muted);font-weight:500}
@@ -191,7 +208,13 @@ h2{font-size:18px}
 .pa-item{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;padding:14px 0}
 .pa-head{cursor:pointer}
 .pa-item+.pa-item{border-top:1px solid var(--line)}
-.pa-item.done{opacity:.45}
+.pa-item.done{opacity:.45;padding:10px 0}
+.pa-item.done .pa-name,.pa-item.done .tip,.pa-item.done .more{display:none}
+.subj .due{font-style:normal;font-size:11px;font-weight:700;color:#fff;background:#f03e3e;border-radius:6px;padding:1px 6px;margin-left:4px}
+.ring{display:inline-flex;align-items:center;gap:6px}
+.ring svg{width:34px;height:34px}
+.ring b{font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums}
+.ring span{font-size:12px;color:var(--muted)}
 .pa-item.done .subj,.pa-item.done .pa-name{text-decoration:line-through}
 .chk{appearance:none;width:24px;height:24px;margin:1px 0 0;border-radius:50%;border:2px solid #d1d6db;cursor:pointer;display:grid;place-items:center;background:var(--surface)}
 .chk:checked{background:var(--accent);border-color:var(--accent)}
@@ -266,8 +289,8 @@ html,body{overscroll-behavior-y:contain}
 
   <section class="hero" id="sec-today">
     <div class="hero-top"><div class="hi" id="hi"></div><div class="wx" id="wx" hidden></div></div>
-    <div class="quote" id="quote"></div>
     <div class="stats" id="stats"></div>
+    <div class="quote" id="quote"></div>
   </section>
 
   <section class="card" id="sec-ev">
@@ -296,7 +319,7 @@ html,body{overscroll-behavior-y:contain}
   </section>
 
   <section class="card" id="sec-pa">
-    <div class="card-h"><h2><i style="--c:#7048e8"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></i>이번 주 수행 체크</h2><span id="paCount"></span></div>
+    <div class="card-h"><h2><i style="--c:#7048e8"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg></i>이번 주 수행 체크</h2><span class="ring" id="paRing"></span></div>
     <div class="pa-list" id="pa"></div>
   </section>
 
@@ -322,7 +345,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -341,7 +364,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -364,7 +387,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -379,6 +402,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -391,6 +415,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -407,7 +432,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -769,7 +794,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-20",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -780,6 +805,9 @@ const DATA = {
   "live": "https://script.google.com/macros/s/AKfycbyt45BFakfCUQk4KtN6LVvun_LDXwrTCKtZhxiNPJD4Ovjvb1FdKgEGhkT3MQwTYdY/exec",
   "lines": {
    "202": [
+    "정부세종청사 남측",
+    "정부세종청사 북측",
+    "도램마을1단지",
     "범지기마을4단지",
     "아름동커뮤니티센터",
     "대법원등기정보센터",
@@ -787,6 +815,9 @@ const DATA = {
     "가락마을20,21단지"
    ],
    "221": [
+    "고운중학교",
+    "고운고등학교 건너편",
+    "가락마을12,14단지",
     "가락초등학교",
     "두루중학교 건너편",
     "두루초,중학교 건너편",
@@ -796,45 +827,21 @@ const DATA = {
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  }
 };
@@ -855,7 +862,7 @@ const dishes=m=>m.split(/<br\s*\/?>/).map(s=>s.replace(/\s*\([\d.\s]+\)\s*/g,"")
 const HUE={"공통국어2":350,"공통수학2":215,"공통영어2":265,"한국사2":28,"통합사회2":45,"통합과학2":160,"과학탐구실험2":185,
   "체육2":120,"음악":300,"미술":330,"기술·가정":75,"정보":200,"생태와 환경":140,"진로와 직업":20,"자율·자치활동":0};
 const hue=s=>HUE[clean(s)]??0;
-const SHORT={"자율·자치활동":"자율","과학탐구실험2":"과탐실험","공통국어2":"국어","공통수학2":"수학","공통영어2":"영어","통합사회2":"통합사회","통합과학2":"통합과학","한국사2":"한국사","체육2":"체육","생태와 환경":"생태환경","기술·가정":"기가"};
+const SHORT={"자율·자치활동":"자율","과학탐구실험2":"과탐","공통국어2":"국어","공통수학2":"수학","공통영어2":"영어","통합사회2":"통사","통합과학2":"통과","한국사2":"한국사","체육2":"체육","생태와 환경":"생태","기술·가정":"기가","진로와 직업":"진로"};
 const short=s=>SHORT[clean(s)]||clean(s);
 
 const weekStart=(()=>{const d=toD(keys[0]);d.setDate(d.getDate()-((d.getDay()+6)%7));return ymd(d);})();
@@ -905,7 +912,7 @@ const WXI={
 // 오늘의 한 줄 (날짜마다 바뀜)
 const QUOTES=[["천 리 길도 한 걸음부터", "속담"], ["시작이 반이다", "속담"], ["티끌 모아 태산", "속담"], ["낙숫물이 댓돌을 뚫는다", "속담"], ["급할수록 돌아가라", "속담"], ["실패는 성공의 어머니", "속담"], ["늦었다고 생각할 때가 가장 빠를 때다", "격언"], ["오늘 할 일을 내일로 미루지 말자", "격언"], ["우공이산(愚公移山): 꾸준히 하면 산도 옮긴다", "고사성어"], ["마부작침(磨斧作針): 도끼를 갈면 바늘이 된다", "고사성어"], ["고진감래(苦盡甘來): 고생 끝에 낙이 온다", "고사성어"], ["일취월장(日就月將): 날마다 달마다 자란다", "고사성어"], ["형설지공(螢雪之功): 반딧불과 눈빛으로 공부해 이룬 성과", "고사성어"], ["배우고 때때로 익히면 또한 기쁘지 아니한가", "공자, 『논어』"], ["아는 것을 안다 하고 모르는 것을 모른다 하는 것, 그것이 아는 것이다", "공자, 『논어』"], ["아는 것이 힘이다", "프랜시스 베이컨"], ["기하학에는 왕도가 없다", "유클리드"], ["Stay hungry, stay foolish.", "스티브 잡스"], ["중요한 것은 질문을 멈추지 않는 것이다", "알베르트 아인슈타인"], ["천재는 1%의 영감과 99%의 노력으로 이루어진다", "토머스 에디슨"]];
 (function(){const n=Math.floor(today0/864e5);const q=QUOTES[((n%QUOTES.length)+QUOTES.length)%QUOTES.length];
-  $("quote").innerHTML=`“${esc(q[0])}”${q[1]&&q[1]!=="고사성어"?`<small>${esc(q[1])}</small>`:""}`;})();
+  $("quote").innerHTML=`<svg class="qi" viewBox="0 0 24 24"><path d="M10 7H6a2 2 0 0 0-2 2v4h5v5H4M20 7h-4a2 2 0 0 0-2 2v4h5v5h-5"/></svg>${esc(q[0])}${q[1]&&q[1]!=="고사성어"?`<small>${esc(q[1])}</small>`:""}`;})();
 
 
 // 등교 버스
@@ -937,7 +944,7 @@ renderBus(); setInterval(renderBus,30000);
 var LIVE=null, liveAt=0, LIVE_ERR="";
 const WALK=5; // 집 → 정류장 걷는 시간(분)
 function drawLive(){
-  const lines=(DATA.bus&&DATA.bus.lines)||{}, MAXS=5, routes=(DATA.bus&&DATA.bus.routes||[]).map(r=>r.no);
+  const lines=(DATA.bus&&DATA.bus.lines)||{}, MAXS=8, NEAR=5, routes=(DATA.bus&&DATA.bus.routes||[]).map(r=>r.no);
   const fmt=d=>`${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;
   if(!LIVE){
     $("busGo").innerHTML=(DATA.bus&&DATA.bus.live)?`<div class="go gray"><b>${LIVE_ERR?"실시간 연결 안 됨":"불러오는 중…"}</b>${LIVE_ERR?`<span>${esc(LIVE_ERR)}</span>`:""}</div>`:"";
@@ -953,7 +960,7 @@ function drawLive(){
       const m=near.left===0?0:Math.max(1,Math.round(near.left*STOP_MIN)), at=new Date(now+m*60000);
       cands.push({no,m,at});
       const lv=m<=5?"red":(m<=10?"amber":"green"), pct=Math.round((n-near.left)/n*100);
-      cards.push(`<div class="bc ${lv}"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${fmt(at)} 도착</span></div>
+      cards.push(`<div class="bc ${lv}${near.left>NEAR?" far":""}"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${fmt(at)} 도착</span></div>
         <div class="bc-m">${m===0?"도착":`${m}<small>분</small>`}</div>
         <div class="bar"><i style="width:${pct}%"></i></div>
         <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${esc((lines[no]||[])[n-near.left]||near.at)}</span></div></div>`);
@@ -965,11 +972,11 @@ function drawLive(){
   cands.sort((a,b)=>a.m-b.m);
   const ok=cands.find(c=>c.m>=WALK), hurry=cands.find(c=>c.m>=WALK-1);
   let go;
-  if(ok&&ok.m-WALK>=3) go=`<div class="go green"><b>여유 있어</b><span>${ok.no}번 ${fmt(ok.at)} 도착 · ${fmt(new Date(ok.at-WALK*60000))}에 집에서 출발</span></div>`;
-  else if(ok) go=`<div class="go amber"><b>지금 나가!</b><span>${ok.no}번 ${fmt(ok.at)} 도착 · 걸어서 ${WALK}분</span></div>`;
+  if(ok&&ok.m-WALK>=3) go=`<div class="go green"><b>${ok.m-WALK}분 뒤 출발</b><span>${ok.no}번 ${fmt(ok.at)} 도착 · ${fmt(new Date(ok.at-WALK*60000))}에 집에서 나가면 돼</span></div>`;
+  else if(ok) go=`<div class="go amber"><b>지금 나가!</b><span>${ok.no}번 ${fmt(ok.at)} 도착${ok.m-WALK>0?` · ${ok.m-WALK}분 안에 출발`:""}</span></div>`;
   else if(hurry) go=`<div class="go red"><b>뛰어!</b><span>${hurry.no}번 ${hurry.m}분 후 도착</span></div>`;
-  else if(cands.length) go=`<div class="go red"><b>이번 버스는 어려워</b><span>다음 버스를 기다려 · 걸어서 ${WALK}분</span></div>`;
-  else go=`<div class="go gray"><b>아직 가까이 오는 버스 없음</b><span>5정거장 안에 버스가 들어오면 알려줄게</span></div>`;
+  else if(cands.length) go=`<div class="go red"><b>이번 버스는 어려워</b><span>다음 버스를 기다려</span></div>`;
+  else go=`<div class="go gray"><b>아직 가까이 오는 버스 없음</b><span>${MAXS}정거장 안에 버스가 들어오면 알려줄게</span></div>`;
   $("busGo").innerHTML=go;
   $("busGrid").innerHTML=cards.join("");
 }
@@ -986,28 +993,36 @@ $("busRefresh").onclick=refreshLive;
 refreshLive(); setInterval(()=>{if(document.visibilityState==="visible")refreshLive();},30000);
 
 // 일정
+const EVI={
+ exam:'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4"/></svg>',
+ vac:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+ sch:'<svg viewBox="0 0 24 24"><path d="M3 10l9-5 9 5-9 5-9-5zM7 12v5c3 2 7 2 10 0v-5"/></svg>',
+ evt:'<svg viewBox="0 0 24 24"><path d="M5 21V4h11l-2 4 2 4H5"/></svg>'};
 (function(){
   const evs=DATA.events.filter(e=>toD(e.to||e.from)>=today0).sort((a,b)=>a.from.localeCompare(b.from));
   if(!evs.length){$("sec-ev").hidden=true;return;}
   $("ev").innerHTML=evs.map(e=>{const n=Math.round((toD(e.from)-today0)/864e5);
     const label=n>0?"D-"+n:(n===0?"오늘":"진행중");
     const exam=/시험|고사/.test(e.n);
-    return `<div class="ev-row${exam?" exam":""}"><div class="dd ${n<=7||exam?"soon":""}"><span class="num">${label}</span><small>${md(e.from)}${e.to&&e.to!==e.from?"~"+(+e.to.slice(6,8))+".":""}</small></div><div><b>${esc(e.n)}</b>${e.sub?`<p>${esc(e.sub)}</p>`:""}</div></div>`}).join("");
+    const kind=exam?"exam":(/방학/.test(e.n)?"vac":(/개학|종업/.test(e.n)?"sch":"evt"));
+    const pct=exam&&n>0?Math.max(4,Math.round((1-Math.min(n,30)/30)*100)):0;
+    return `<div class="ev-row${exam?" exam":""}"><div class="dd ${n<=7||exam?"soon":""}"><span class="num">${label}</span><small>${md(e.from)}${e.to&&e.to!==e.from?"~"+(+e.to.slice(6,8))+".":""}</small></div><div><b><span class="evi">${EVI[kind]}</span>${esc(e.n)}</b>${e.sub?`<p>${esc(e.sub)}</p>`:""}${exam&&n>0?`<div class="exbar"><i style="width:${pct}%"></i></div><p class="exl">시험까지 ${n}일 · 한 달 전부터 차오름</p>`:""}</div></div>`}).join("");
 })();
 
 // 시간표
 (function(){
   $("ttRange").textContent=`${DATA.grade}-${DATA.cls}`;
   const max=Math.max(1,...keys.map(k=>DATA.days[k].tt.length));
-  let h='<tr><th class="pc"></th>'+keys.map(k=>`<th class="${k===todayK?"today":""}">${WD[toD(k).getDay()]}<br><span class="num">${+k.slice(6,8)}</span></th>`).join("")+"</tr>";
+  const hasToday=keys.includes(todayK), cls=k=>hasToday?(k===todayK?" tday":" dim"):"";
+  let h='<tr><th class="pc"></th>'+keys.map(k=>`<th class="${k===todayK?"today":""}${cls(k)}">${WD[toD(k).getDay()]}<br><span class="num">${+k.slice(6,8)}</span></th>`).join("")+"</tr>";
   for(let p=0;p<max;p++){
     h+=`<tr><td class="pnum" style="background:none;height:auto">${p+1}</td>`;
     keys.forEach(k=>{
       const tt=DATA.days[k].tt;
-      if(isExamDay(k)){if(p===0)h+=`<td class="off exam" rowspan="${max}">수능<br>수업<br>없음</td>`;return;}
-      if(!tt.length){if(p===0)h+=`<td class="off" rowspan="${max}">쉬는 날</td>`;return;}
+      if(isExamDay(k)){if(p===0)h+=`<td class="off exam${cls(k)}" rowspan="${max}">수능<br>수업<br>없음</td>`;return;}
+      if(!tt.length){if(p===0)h+=`<td class="off${cls(k)}" rowspan="${max}">쉬는 날</td>`;return;}
       const s=tt[p];
-      h+=s?`<td class="${paSet.has(clean(s))?"pa":""}" style="--h:${hue(s)}">${esc(short(s))}</td>`:`<td class="empty"></td>`;
+      h+=s?`<td class="${paSet.has(clean(s))?"pa":""}${cls(k)}${p===max-1?" last":""}${p===0?" first":""}" style="--h:${hue(s)}">${esc(short(s))}</td>`:`<td class="empty${cls(k)}"></td>`;
     });
     h+="</tr>";
   }
@@ -1015,12 +1030,15 @@ refreshLive(); setInterval(()=>{if(document.visibilityState==="visible")refreshL
 })();
 
 // 급식
+const FAV=/치킨|닭강정|떡볶이|피자|돈[까가]스|햄버거|버거|스파게티|파스타|짜장|탕수육|핫도그|마라|케이크|도넛|아이스크림|빙수|갈비|삼겹|스테이크|초코|츄러스|와플|닭꼬치|새우튀김/;
 (function(){
+  // 저녁 6시 이후에는 다음 날 메뉴를 먼저
+  const mf=(()=>{if(now.getHours()>=18){const nx=keys.find(k=>k>todayK);if(nx)return nx;}return focus;})();
   $("meal").innerHTML=keys.map(k=>{const ms=DATA.days[k].meal||[];
-    return `<div class="mday ${k===focus?"today":""}" data-k="${k}"><h3>${WD[toD(k).getDay()]}<small>${md(k)}</small></h3>`+
-      (ms.length?ms.map(m=>`<div class="meal"><div class="mh"><b>${m.t}</b><span>${m.cal}kcal</span></div><ul>${dishes(m.m).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")
+    return `<div class="mday ${k===mf?"today":""}" data-k="${k}"><h3>${WD[toD(k).getDay()]}<small>${md(k)}</small>${k===mf&&k!==todayK?'<em class="nx">내일</em>':""}</h3>`+
+      (ms.length?ms.map(m=>`<div class="meal"><div class="mh"><b>${m.t}</b><span>${m.cal}kcal</span></div><ul>${dishes(m.m).map(x=>`<li${FAV.test(x)?' class="fav"':""}>${esc(x)}</li>`).join("")}</ul></div>`).join("")
         :`<div class="nomeal">${isExamDay(k)?"수능 날, 급식 없어":"급식 없는 날"}</div>`)+"</div>";}).join("");
-  const t=$("meal").querySelector(`[data-k="${focus}"]`);
+  const t=$("meal").querySelector(`[data-k="${mf}"]`);
   if(t)requestAnimationFrame(()=>{$("meal").scrollLeft=t.offsetLeft-16;});
 })();
 
@@ -1028,12 +1046,27 @@ refreshLive(); setInterval(()=>{if(document.visibilityState==="visible")refreshL
 (function(){
   let done={};try{done=JSON.parse(localStorage.getItem("paDone")||"{}")}catch(_){}
   const id=x=>weekStart+"|"+x[0]+"|"+x[1];
+  // 이번 주가 무슨 '○월 ○주'인지 (그 달 첫 평일이 든 주 = 1주)
+  const wkLabels=(()=>{const set=new Set(),ws=toD(weekStart);
+    for(let i=0;i<5;i++){const d=new Date(ws);d.setDate(d.getDate()+i);const m=d.getMonth()+1;
+      let f=new Date(d.getFullYear(),d.getMonth(),1);while(f.getDay()===0||f.getDay()===6)f.setDate(f.getDate()+1);
+      const fm=new Date(f);fm.setDate(f.getDate()-((f.getDay()+6)%7));set.add(m+"-"+(Math.round((ws-fm)/6048e5)+1));
+      const nx=new Date(d);nx.setDate(d.getDate()+1);if(nx.getMonth()!==d.getMonth()||i===4){/* 마지막 평일 체크용 */}
+    }return set;})();
+  const lastWeekOf=m=>{const ws=toD(weekStart),we=new Date(ws);we.setDate(ws.getDate()+4);
+    let l=new Date(ws.getFullYear(),m,0);while(l.getDay()===0||l.getDay()===6)l.setDate(l.getDate()-1);return l>=ws&&l<=we;};
+  const dueNow=x=>{const all=[...x[1].matchAll(/(\d+)월\s*(\d+)(?:~(\d+))?\s*주/g)];
+    if(all.length){const g=all[all.length-1];return wkLabels.has(+g[1]+"-"+(+(g[3]||g[2])));}
+    const mo=[...x[1].matchAll(/~\s*(\d+)월/g)];return mo.length?lastWeekOf(+mo[mo.length-1][1]):false;};
+  function ring(dn,tot){const r=15,c=2*Math.PI*r,p=tot?dn/tot:0;
+    return `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="${r}" fill="none" stroke="#eceaf8" stroke-width="5"/><circle cx="20" cy="20" r="${r}" fill="none" stroke="#7048e8" stroke-width="5" stroke-linecap="round" stroke-dasharray="${c*p} ${c}" transform="rotate(-90 20 20)"/></svg><b>${dn}/${tot}</b><span>${dn===tot&&tot?"다 했다!":"완료"}</span>`;}
   function draw(){
-    const left=paList.filter(x=>!done[id(x)]).length;
-    $("paCount").textContent=paList.length?(left?`${left}개 남음`:"다 했다!"):"";
-    $("pa").innerHTML=paList.length?paList.map((x,i)=>{const dt=x[5]||{};return `<div class="pa-item ${done[id(x)]?"done":""}" style="--h:${hue(x[0])}">
+    const dn=paList.filter(x=>done[id(x)]).length;
+    $("paRing").innerHTML=paList.length?ring(dn,paList.length):"";
+    const order=paList.map((x,i)=>({x,i,due:dueNow(x),d:!!done[id(x)]})).sort((a,b)=>(a.d-b.d)||(b.due-a.due)||(a.i-b.i));
+    $("pa").innerHTML=paList.length?order.map(({x,i,due})=>{const dt=x[5]||{};return `<div class="pa-item ${done[id(x)]?"done":""}" style="--h:${hue(x[0])}">
       <input type="checkbox" class="chk" id="pa${i}" data-i="${i}" ${done[id(x)]?"checked":""} aria-label="${esc(x[0])} 완료">
-      <div><label for="pa${i}" class="pa-head"><span class="subj">${esc(x[0])}</span>${x[4]?`<span class="meta">${esc(x[4])}</span>`:""}</label>
+      <div><label for="pa${i}" class="pa-head"><span class="subj">${esc(x[0])}${due&&!done[id(x)]?'<em class="due">이번 주 마감</em>':""}</span>${x[4]?`<span class="meta">${esc(x[4])}</span>`:""}</label>
       <div class="pa-name">${esc(x[1])}</div>${x[2]?`<div class="tip">${x[3]?`<b>${esc(x[3])}</b>`:""}${esc(x[2])}</div>`:""}
       ${dt.a||dt.chk?`<details class="more"><summary>자세히 보기</summary>
         ${dt.a?`<div class="lv"><b>${x[0]==="생태와 환경"?"통과 포인트":"A 포인트"}</b>${esc(dt.a)}</div>`:""}
