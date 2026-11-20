@@ -345,7 +345,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -364,7 +364,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -387,7 +387,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -402,6 +402,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -414,6 +415,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -430,7 +432,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -792,7 +794,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-20",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -825,45 +827,21 @@ const DATA = {
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  }
 };
@@ -1002,15 +980,23 @@ function drawLive(){
   $("busGo").innerHTML=go;
   $("busGrid").innerHTML=cards.join("");
 }
+// 마지막 결과를 휴대폰에 저장해 두고, 열자마자 먼저 보여줌 (3분 이내 것만)
+try{const c=JSON.parse(localStorage.getItem("liveCache")||"null");if(c&&Date.now()-c.at<18e4){LIVE=c.data;liveAt=c.at;}}catch(_){}
 async function loadLive(){
   const url=DATA.bus&&DATA.bus.live; if(!url)return;
-  try{const r=await fetch(url,{cache:"no-store",redirect:"follow"});const j=await r.json();
-    if(j.error&&!(j.routes||[]).length){LIVE_ERR=j.error;LIVE=null;}else{LIVE=j;LIVE_ERR="";}liveAt=Date.now();}
-  catch(e){LIVE_ERR=e&&e.message?e.message:"접속 실패";}
+  const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),8000);
+  try{const r=await fetch(url,{cache:"no-store",redirect:"follow",signal:ctl.signal});const j=await r.json();
+    if(j.error&&!(j.routes||[]).length){LIVE_ERR=j.error;if(!LIVE)LIVE=null;}else{LIVE=j;LIVE_ERR="";liveAt=Date.now();
+      try{localStorage.setItem("liveCache",JSON.stringify({at:liveAt,data:j}));}catch(_){}}}
+  catch(e){LIVE_ERR=e&&e.name==="AbortError"?"응답이 늦어":(e&&e.message?e.message:"접속 실패");}
+  finally{clearTimeout(to);}
   drawLive();
 }
 function liveStamp(){const d=new Date(liveAt);$("busRefreshTxt").innerHTML=liveAt?`새로고침 <small>${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}:${String(d.getSeconds()).padStart(2,"0")} 기준</small>`:"새로고침";}
-async function refreshLive(){const btn=$("busRefresh");btn.classList.add("spin");await loadLive();btn.classList.remove("spin");liveStamp();}
+let liveBusy=false;
+async function refreshLive(){if(liveBusy)return;liveBusy=true;const btn=$("busRefresh");btn.classList.add("spin");$("busRefreshTxt").firstChild&&($("busRefreshTxt").innerHTML="받아오는 중…");
+  await loadLive();btn.classList.remove("spin");liveStamp();liveBusy=false;}
+if(LIVE)drawLive();
 $("busRefresh").onclick=refreshLive;
 refreshLive(); setInterval(()=>{if(document.visibilityState==="visible")refreshLive();},30000);
 
