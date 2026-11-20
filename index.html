@@ -429,7 +429,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -448,7 +448,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -471,7 +471,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -486,6 +486,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -498,6 +499,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -514,7 +516,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -1009,7 +1011,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-20",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -1042,45 +1044,21 @@ const DATA = {
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  },
  "busPm": {
@@ -1213,8 +1191,9 @@ renderBus(); setInterval(renderBus,30000);
 // 실시간 버스 위치 (Google Apps Script 중계)
 var LIVE=null, liveAt=0, LIVE_ERR="";
 // 남은 분: 공식 도착정보(초)가 있으면 그것, 없으면 정거장 × 1.5분 추정
+const LAG_SEC=30; // 원본 데이터 지연 보정: 실제 버스는 보고된 것보다 앞서 있으므로 30초 일찍 도착하는 것으로 계산
 function busMin(b,t){ // t: 데이터를 받은 시각(서버 time) → 지난 시간만큼 빼서 계속 줄어들게
-  if(b.sec!=null&&!isNaN(b.sec)){const el=t?Math.max(0,(Date.now()-Date.parse(t))/1000):0;return Math.max(0,Math.round((b.sec-el)/60));}return b.left===0?0:Math.max(1,Math.round(b.left*STOP_MIN));}
+  if(b.sec!=null&&!isNaN(b.sec)){const el=t?Math.max(0,(Date.now()-Date.parse(t))/1000):0;return Math.max(0,Math.floor((b.sec-el-LAG_SEC)/60));}return b.left===0?0:Math.max(1,Math.round(b.left*STOP_MIN));}
 function trackHTML(bs,N){ // 두루중 앞 N정거장 노선과 버스 위치
   const occ=new Set(bs.filter(b=>b.left<=N).map(b=>b.left));let h="";
   for(let k=N;k>=1;k--)h+=`<span class="st${occ.has(k)?" bus":""}"></span><span class="ln"></span>`;
@@ -1353,7 +1332,7 @@ function busGate(){
   return on;
 }
 setTab(BUS_TAB);
-setInterval(()=>{if(document.visibilityState!=="visible")return;if(BUS_TAB==="pm")loadPm();else if(busGate())refreshLive();},30000);
+setInterval(()=>{if(document.visibilityState!=="visible")return;if(BUS_TAB==="pm")loadPm();else if(busGate())refreshLive();},15000);
 
 
 // 받아 온 데이터로 10초마다 남은 시간만 다시 계산 (인터넷 요청 없음)
