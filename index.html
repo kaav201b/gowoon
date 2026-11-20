@@ -429,7 +429,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -448,7 +448,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -471,7 +471,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -486,6 +486,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -498,6 +499,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -514,7 +516,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -1042,45 +1044,21 @@ const DATA = {
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  },
  "busPm": {
@@ -1234,7 +1212,7 @@ function drawLive(){
     const n=Math.min(MAXS,(lines[no]||[]).length||MAXS);
     const r=(LIVE.routes||[]).find(x=>x.no===no);
     const bs=(r?r.buses:[]).filter(b=>b.left<=n).sort((a,b)=>a.left-b.left);
-    const near=bs[0]||(r&&r.next?{left:r.next.left,sec:r.next.sec,at:"",far:true}:null);
+    const near=bs[0]||(r&&r.next?Object.assign({at:""},r.next,{far:true}):null);
     if(near){
       const m=busMin(near,LIVE.time), at=new Date(now+m*60000);
       cands.push({no,m,at});
@@ -1242,7 +1220,7 @@ function drawLive(){
       cards.push(`<div class="bc ${lv}${near.left>NEAR?" far":""}"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${fmt(at)} 도착</span></div>
         <div class="bc-m">${m===0?"도착":`${m}<small>분</small>`}</div>
         ${near.left<=NEAR?trackHTML(bs,NEAR):`<div class="bar"><i style="width:${Math.max(0,pct)}%"></i></div>`}
-        <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${near.far?"다음 버스 · 아직 멀리 있어":esc((lines[no]||[])[n-near.left]||near.at)}</span></div></div>`);
+        <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${near.far?(near.est?`다음 버스 · 지금 ${esc(near.at)} (종점 대기에 따라 늦어질 수 있어)`:"다음 버스 · 아직 멀리 있어"):esc((lines[no]||[])[n-near.left]||near.at)}</span></div></div>`);
     }else{
       cards.push(`<div class="bc none"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bar"><i style="width:0"></i></div><div class="bc-s">${n}정거장 안에 없음</div></div>`);
     }
@@ -1335,7 +1313,7 @@ function drawPm(){
   if(!LIVE_PM){el.innerHTML=head+`<div class="bus-go"><div class="go gray"><em>${LIVE_PM_ERR?"연결 안 됨":"대기"}</em><b>${LIVE_PM_ERR?"실시간 연결 안 됨":"불러오는 중…"}</b><span class="now">${esc(LIVE_PM_ERR||"")}</span></div></div>`+btn;bindPm();return;}
   const MAXS=8, NEAR=5, cands=[], cards=[];
   h.routes.forEach(no=>{
-    const r=(LIVE_PM.routes||[]).find(x=>x.no===no), bs=(r?r.buses:[]).filter(b=>b.left<=MAXS).sort((a,b)=>a.left-b.left), near=bs[0]||(r&&r.next?{left:r.next.left,sec:r.next.sec,at:"",far:true}:null);
+    const r=(LIVE_PM.routes||[]).find(x=>x.no===no), bs=(r?r.buses:[]).filter(b=>b.left<=MAXS).sort((a,b)=>a.left-b.left), near=bs[0]||(r&&r.next?Object.assign({at:""},r.next,{far:true}):null);
     if(!near){cards.push(`<div class="bc none wide"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bc-s">${MAXS}정거장 안에 없음</div></div>`);return;}
     const m=busMin(near,LIVE_PM.time), at=new Date(now+m*60000);
     cands.push({no,m,at});
@@ -1344,7 +1322,7 @@ function drawPm(){
     cards.push(`<div class="bc ${lv} wide"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${fmt(at)} 정류장 도착</span></div>
       <div class="bc-m">${m===0?"도착":`${m}<small>분</small>`}</div>
       ${near.left<=NEAR?trackHTML(bs,NEAR):`<div class="bar"><i style="width:${pct}%"></i></div>`}
-      <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${near.far?"다음 버스 · 아직 멀리 있어":esc((h.lines[no]||[])[MAXS-near.left]||near.at)}</span></div>
+      <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${near.far?(near.est?`다음 버스 · 지금 ${esc(near.at)} (종점 대기에 따라 늦어질 수 있어)`:"다음 버스 · 아직 멀리 있어"):esc((h.lines[no]||[])[MAXS-near.left]||near.at)}</span></div>
       <div class="dests"><small>학원 근처 도착 예상</small>${arr}</div></div>`);
   });
   cands.sort((a,b)=>a.m-b.m);
