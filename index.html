@@ -428,7 +428,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -447,7 +447,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -470,7 +470,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -485,6 +485,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -497,6 +498,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -513,7 +515,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -1008,7 +1010,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-20",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -1041,45 +1043,21 @@ const DATA = {
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  },
  "busPm": {
@@ -1256,16 +1234,16 @@ function drawLive(){
   $("busGo").innerHTML=go;
   $("busGrid").innerHTML=cards.join("");
 }
+// 시간 제한 있는 fetch (AbortSignal 없이 — 일부 미리보기 환경에서 signal을 넘기면 오류)
+function fetchT(url,ms){return Promise.race([fetch(url,{cache:"no-store"}),new Promise((_,rej)=>setTimeout(()=>rej(Object.assign(new Error("응답이 늦어"),{name:"Timeout"})),ms))]);}
 // 마지막 결과를 휴대폰에 저장해 두고, 열자마자 먼저 보여줌 (3분 이내 것만)
 try{const c=JSON.parse(localStorage.getItem("liveCache")||"null");if(c&&Date.now()-c.at<18e4){LIVE=c.data;liveAt=c.at;}}catch(_){}
 async function loadLive(){
   const url=DATA.bus&&DATA.bus.live; if(!url)return;
-  const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),8000);
-  try{const r=await fetch(url,{cache:"no-store",redirect:"follow",signal:ctl.signal});const j=await r.json();
+  try{const r=await fetchT(url,8000);const j=await r.json();
     if(j.error&&!(j.routes||[]).length){LIVE_ERR=j.error;if(!LIVE)LIVE=null;}else{LIVE=j;LIVE_ERR="";liveAt=Date.now();
       try{localStorage.setItem("liveCache",JSON.stringify({at:liveAt,data:j}));}catch(_){}}}
-  catch(e){LIVE_ERR=e&&e.name==="AbortError"?"응답이 늦어":(e&&e.message?e.message:"접속 실패");}
-  finally{clearTimeout(to);}
+  catch(e){LIVE_ERR=e&&e.message?e.message:"접속 실패";}
   drawLive();
 }
 function liveStamp(){const d=new Date(liveAt);$("busRefreshTxt").innerHTML=liveAt?`새로고침 <small>${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}:${String(d.getSeconds()).padStart(2,"0")} 기준</small>`:"새로고침";}
@@ -1293,11 +1271,9 @@ var LIVE_PM=null, LIVE_PM_ERR="", livePmAt=0;
 const WALK_PM=3; // 학교 → 가락마을12,14단지 정류장 걷는 시간(분) [가정]
 async function loadPm(){
   const h=DATA.busPm, url=DATA.bus&&DATA.bus.live; if(!h||!url)return;
-  const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),8000);
-  try{const r=await fetch(url+(url.includes("?")?"&":"?")+"t=pm",{cache:"no-store",signal:ctl.signal});const j=await r.json();
+  try{const r=await fetchT(url+(url.includes("?")?"&":"?")+"t=pm",8000);const j=await r.json();
     if(j.error&&!(j.routes||[]).length)LIVE_PM_ERR=j.error;else{LIVE_PM=j;LIVE_PM_ERR="";livePmAt=Date.now();}}
-  catch(e){LIVE_PM_ERR=e&&e.name==="AbortError"?"응답이 늦어":(e&&e.message?e.message:"접속 실패");}
-  finally{clearTimeout(to);}
+  catch(e){LIVE_PM_ERR=e&&e.message?e.message:"접속 실패";}
   drawPm();
 }
 function drawPm(){
@@ -1336,6 +1312,8 @@ function bindPm(){const b=$("pmRefresh");if(b)b.onclick=async()=>{b.classList.ad
 document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
 function busGate(){
   if(BUS_TAB==="pm")return false;
+  $("sec-bus").classList.remove("bus-off");
+  return true; // 시간 제한 없이 항상 보여줌
   const w=busWindow(), on=w.on;
   $("sec-bus").classList.toggle("bus-off",!on);
   if(!on){
