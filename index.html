@@ -149,6 +149,11 @@ h2{font-size:18px}
 .track{display:flex;align-items:center;gap:0;padding:4px 0}
 .track .st{width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid #c4cad1;flex:none;position:relative}
 .track .ln{flex:1;height:2px;background:#d1d6db;min-width:8px}
+.track.mini{padding:5px 2px}
+.track.mini .ln{min-width:4px}
+.track.mini .st{width:9px;height:9px}
+.track.mini .st.bus{width:13px;height:13px;background:currentColor;border-color:currentColor;box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+.track.mini .st.goal{border-color:var(--accent)}
 .track .st.goal{width:14px;height:14px;border-color:var(--accent);border-width:3px}
 .track .st.bus{background:#f03e3e;border-color:#f03e3e;width:14px;height:14px;box-shadow:0 0 0 4px #ffe3e3}
 .track .gl{margin-left:6px;font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap}
@@ -356,7 +361,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -375,7 +380,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -398,7 +403,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -413,6 +418,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -425,6 +431,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -441,7 +448,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -803,7 +810,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-20",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -836,45 +843,21 @@ const DATA = {
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  }
 };
@@ -975,6 +958,11 @@ renderBus(); setInterval(renderBus,30000);
 
 // 실시간 버스 위치 (Google Apps Script 중계)
 var LIVE=null, liveAt=0, LIVE_ERR="";
+function trackHTML(bs,N){ // 두루중 앞 N정거장 노선과 버스 위치
+  const occ=new Set(bs.filter(b=>b.left<=N).map(b=>b.left));let h="";
+  for(let k=N;k>=1;k--)h+=`<span class="st${occ.has(k)?" bus":""}"></span><span class="ln"></span>`;
+  return `<div class="track mini">${h}<span class="st goal${occ.has(0)?" bus":""}"></span></div>`;
+}
 const WALK=5; // 집 → 정류장 걷는 시간(분)
 function drawLive(){
   const lines=(DATA.bus&&DATA.bus.lines)||{}, MAXS=8, NEAR=5, routes=(DATA.bus&&DATA.bus.routes||[]).map(r=>r.no);
@@ -995,7 +983,7 @@ function drawLive(){
       const lv=m<=5?"red":(m<=10?"amber":"green"), pct=Math.round((n-near.left)/n*100);
       cards.push(`<div class="bc ${lv}${near.left>NEAR?" far":""}"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${fmt(at)} 도착</span></div>
         <div class="bc-m">${m===0?"도착":`${m}<small>분</small>`}</div>
-        <div class="bar"><i style="width:${pct}%"></i></div>
+        ${near.left<=NEAR?trackHTML(bs,NEAR):`<div class="bar"><i style="width:${pct}%"></i></div>`}
         <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${esc((lines[no]||[])[n-near.left]||near.at)}</span></div></div>`);
     }else{
       cards.push(`<div class="bc none"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bar"><i style="width:0"></i></div><div class="bc-s">${n}정거장 안에 없음</div></div>`);
