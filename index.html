@@ -196,6 +196,7 @@ h2{font-size:18px}
 .bus-offmsg b{font-size:15px;font-weight:700;color:var(--ink2)}
 .bus-offmsg span{font-size:13px;color:var(--muted)}
 .bus-off .bus-go,.bus-off .bus-grid,.bus-off .bus-btn{display:none}
+.clock{font-size:15px;font-weight:700;color:var(--muted);margin-left:8px;font-variant-numeric:tabular-nums;letter-spacing:0}
 .seg{display:inline-flex;background:var(--fill);border:1px solid var(--line);border-radius:10px;padding:2px}
 .seg button{border:0;background:none;font:700 13px var(--font);color:var(--muted);padding:5px 14px;border-radius:8px;cursor:pointer}
 .seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
@@ -386,7 +387,7 @@ html,body{overscroll-behavior-y:contain}
   </section>
 
   <section class="card" id="sec-bus">
-    <div class="card-h"><h2><i style="--c:#2fb344"><svg viewBox="0 0 24 24"><path d="M6 4h12a2 2 0 0 1 2 2v10H4V6a2 2 0 0 1 2-2zM4 12h16M8 20v-4M16 20v-4"/></svg></i>버스</h2><div class="seg" role="tablist" aria-label="등교·하교 선택"><button type="button" role="tab" data-tab="am" id="tabAm">등교</button><button type="button" role="tab" data-tab="pm" id="tabPm">하교</button></div></div>
+    <div class="card-h"><h2><i style="--c:#2fb344"><svg viewBox="0 0 24 24"><path d="M6 4h12a2 2 0 0 1 2 2v10H4V6a2 2 0 0 1 2-2zM4 12h16M8 20v-4M16 20v-4"/></svg></i>버스<span class="clock" id="busClock"></span></h2><div class="seg" role="tablist" aria-label="등교·하교 선택"><button type="button" role="tab" data-tab="am" id="tabAm">등교</button><button type="button" role="tab" data-tab="pm" id="tabPm">하교</button></div></div>
     <div class="bus-pm" id="busPm" hidden></div>
     <div class="bus-path" id="busPath"></div>
     <div class="bus-offmsg" id="busOff"></div>
@@ -428,7 +429,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-20",
+ "updated": "2026-11-15",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -447,7 +448,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "814",
-     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤. "
+     "m": "산채비빔밥 (5.6)<br/>건새우아욱국. (5.6.9)<br/>총각김치. (9)<br/>생크림찹쌀떡 (2.5.6.13)<br/>간장소스닭꼬치 (5.6.15)<br/>귤."
     },
     {
      "t": "석식",
@@ -470,7 +471,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "891",
-     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국 <br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
+     "m": "날치알김치볶음밥. (1.2.5.6.9.10.13.15.16)<br/>크레이프케이크 (1.2.5.6)<br/>들깨무채국<br/>등갈비폭립샐러드 (5.6.10.12.13.18)<br/>통새우꼬치 (1.5.6.9.12.13)<br/>오이소박이. (9)"
     },
     {
      "t": "석식",
@@ -485,6 +486,7 @@ const DATA = {
     "한국사2",
     "미술"
    ],
+   "full": true,
    "meal": [
     {
      "t": "중식",
@@ -497,6 +499,7 @@ const DATA = {
    "tt": [
     "대학수학능력시험"
    ],
+   "full": true,
    "meal": []
   },
   "20261120": {
@@ -513,7 +516,7 @@ const DATA = {
     {
      "t": "중식",
      "cal": "847",
-     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지. <br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
+     "m": "영양닭죽. (15)<br/>두부/김치볶음. (5.9)<br/>열무물김치 (9)<br/>과일주스 (13)<br/>오렌지.<br/>수제칠리핫도그 (1.2.5.6.10.12.13.15.16)"
     }
    ]
   }
@@ -1008,7 +1011,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-20",
+  "updated": "",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -1041,45 +1044,21 @@ const DATA = {
   }
  },
  "weather": {
-  "20261120": {
-   "min": -3,
-   "max": 4,
-   "am": -3,
-   "sky": "1",
-   "pty": "3",
-   "pop": 60
-  },
-  "20261121": {
-   "min": -5,
-   "max": 4,
-   "am": -5,
-   "sky": "1",
+  "20261116": {
+   "min": 4,
+   "max": 17,
+   "am": 5,
+   "sky": "3",
    "pty": "0",
-   "pop": 20
+   "pop": 30
   },
-  "20261122": {
-   "min": -5,
-   "max": 6,
-   "am": -5,
-   "sky": "1",
+  "20261115": {
+   "min": 8,
+   "max": 18,
+   "am": 10,
+   "sky": "4",
    "pty": "0",
-   "pop": 0
-  },
-  "20261123": {
-   "min": -1,
-   "max": 12,
-   "am": null,
-   "sky": "",
-   "pty": "1",
-   "pop": 60
-  },
-  "20261124": {
-   "min": 6,
-   "max": 6,
-   "am": null,
-   "sky": "",
-   "pty": "0",
-   "pop": null
+   "pop": 30
   }
  },
  "busPm": {
@@ -1247,22 +1226,24 @@ function drawLive(){
   const ok=cands.find(c=>c.m>=WALK), hurry=cands.find(c=>c.m>=WALK-1);
   let go;
   const nowS=fmt(new Date(now));
-  const box=(cls,tag,c)=>`<div class="go ${cls}"><b>${c.no}번 ${fmt(c.at)} 도착 <small>(${c.m===0?"도착":`${c.m}분`})</small></b><span class="now">지금 ${nowS}</span></div>`;
+  const box=(cls,tag,c)=>`<div class="go ${cls}"><b>${c.no}번 ${fmt(c.at)} 도착 <small>(${c.m===0?"도착":`${c.m}분`})</small></b></div>`;
   if(ok&&ok.m-WALK>=3) go=box("green","여유 있어",ok);
   else if(ok) go=box("amber","지금 나가!",ok);
   else if(hurry) go=box("red","뛰어!",hurry);
-  else if(cands.length) go=`<div class="go red"><em>이번 버스는 어려워</em><b>다음 버스를 기다려</b><span class="now">지금 ${nowS}</span></div>`;
-  else go=`<div class="go gray"><em>대기</em><b>아직 가까이 오는 버스 없음</b><span class="now">지금 ${nowS}</span></div>`;
+  else if(cands.length) go=`<div class="go red"><em>이번 버스는 어려워</em><b>다음 버스를 기다려</b></div>`;
+  else go=`<div class="go gray"><em>대기</em><b>아직 가까이 오는 버스 없음</b></div>`;
   $("busGo").innerHTML=go;
   $("busGrid").innerHTML=cards.join("");
 }
 // 시간 제한 있는 fetch (AbortSignal 없이 — 일부 미리보기 환경에서 signal을 넘기면 오류)
+function fresh(u,f){return f?u+(u.includes("?")?"&":"?")+"f=1":u;}
 function fetchT(url,ms){return Promise.race([fetch(url,{cache:"no-store"}),new Promise((_,rej)=>setTimeout(()=>rej(Object.assign(new Error("응답이 늦어"),{name:"Timeout"})),ms))]);}
 // 마지막 결과를 휴대폰에 저장해 두고, 열자마자 먼저 보여줌 (3분 이내 것만)
 try{const c=JSON.parse(localStorage.getItem("liveCache")||"null");if(c&&Date.now()-c.at<18e4){LIVE=c.data;liveAt=c.at;}}catch(_){}
+var LIVE_FORCE=false;
 async function loadLive(){
   const url=DATA.bus&&DATA.bus.live; if(!url)return;
-  try{const r=await fetchT(url,8000);const j=await r.json();
+  try{const r=await fetchT(fresh(url,LIVE_FORCE),8000);LIVE_FORCE=false;const j=await r.json();
     if(j.error&&!(j.routes||[]).length){LIVE_ERR=j.error;if(!LIVE)LIVE=null;}else{LIVE=j;LIVE_ERR="";liveAt=Date.now();
       try{localStorage.setItem("liveCache",JSON.stringify({at:liveAt,data:j}));}catch(_){}}}
   catch(e){LIVE_ERR=e&&e.message?e.message:"접속 실패";}
@@ -1272,7 +1253,7 @@ function liveStamp(){const d=new Date(liveAt);$("busRefreshTxt").innerHTML=liveA
 let liveBusy=false;
 async function refreshLive(){if(liveBusy)return;liveBusy=true;const btn=$("busRefresh");btn.classList.add("spin");$("busRefreshTxt").firstChild&&($("busRefreshTxt").innerHTML="받아오는 중…");
   await loadLive();btn.classList.remove("spin");liveStamp();liveBusy=false;}
-$("busRefresh").onclick=refreshLive;
+$("busRefresh").onclick=()=>{LIVE_FORCE=true;refreshLive();};
 // 등교 시간(수업 있는 날 06:30~08:30)에만 버스 정보를 보여주고 불러옴
 var BUS_FROM=6*60+30, BUS_TO=8*60+30;
 function busWindow(){
@@ -1282,18 +1263,18 @@ function busWindow(){
 }
 // 등교·하교 탭 (오전엔 등교, 낮 12시부터는 하교가 기본. 직접 바꿀 수 있음)
 let BUS_TAB=new Date().getHours()<12?"am":"pm";
-function setTab(t){BUS_TAB=t;
+function setTab(t,force){BUS_TAB=t;
   ["am","pm"].forEach(x=>{const b=$(x==="am"?"tabAm":"tabPm");b.classList.toggle("on",x===t);b.setAttribute("aria-selected",x===t);});
   $("sec-bus").classList.toggle("tab-pm",t==="pm");
   $("busPm").hidden=t!=="pm";
-  if(t==="pm"){drawPm();loadPm();}else if(busGate()){if(LIVE)drawLive();refreshLive();}
+  if(t==="pm"){drawPm();pmSpin();loadPm(force);}else if(busGate()){if(LIVE)drawLive();LIVE_FORCE=!!force;refreshLive();}
 }
 // 하교 버스 (학교 → 학원)
 var LIVE_PM=null, LIVE_PM_ERR="", livePmAt=0;
 const WALK_PM=3; // 학교 → 가락마을12,14단지 정류장 걷는 시간(분) [가정]
-async function loadPm(){
+async function loadPm(force){
   const h=DATA.busPm, url=DATA.bus&&DATA.bus.live; if(!h||!url)return;
-  try{const r=await fetchT(url+(url.includes("?")?"&":"?")+"t=pm",8000);const j=await r.json();
+  try{const r=await fetchT(fresh(url+(url.includes("?")?"&":"?")+"t=pm",force),8000);const j=await r.json();
     if(j.error&&!(j.routes||[]).length)LIVE_PM_ERR=j.error;else{LIVE_PM=j;LIVE_PM_ERR="";livePmAt=Date.now();}}
   catch(e){LIVE_PM_ERR=e&&e.message?e.message:"접속 실패";}
   drawPm();
@@ -1321,17 +1302,18 @@ function drawPm(){
   });
   cands.sort((a,b)=>a.m-b.m);
   const ok=cands.find(c=>c.m>=WALK_PM), hurry=cands.find(c=>c.m>=WALK_PM-1);
-  const box=(cls,tag,c)=>`<div class="go ${cls}"><b>${c.no}번 ${fmt(c.at)} 도착 <small>(${c.m===0?"도착":`${c.m}분`})</small></b><span class="now">지금 ${nowS}</span></div>`;
+  const box=(cls,tag,c)=>`<div class="go ${cls}"><b>${c.no}번 ${fmt(c.at)} 도착 <small>(${c.m===0?"도착":`${c.m}분`})</small></b></div>`;
   let go;
   if(ok&&ok.m-WALK_PM>=3)go=box("green","여유 있어",ok);
   else if(ok)go=box("amber","지금 나가!",ok);
   else if(hurry)go=box("red","뛰어!",hurry);
-  else if(cands.length)go=`<div class="go red"><em>이번 버스는 어려워</em><b>다음 버스를 기다려</b><span class="now">지금 ${nowS}</span></div>`;
-  else go=`<div class="go gray"><em>대기</em><b>아직 가까이 오는 버스 없음</b><span class="now">지금 ${nowS}</span></div>`;
+  else if(cands.length)go=`<div class="go red"><em>이번 버스는 어려워</em><b>다음 버스를 기다려</b></div>`;
+  else go=`<div class="go gray"><em>대기</em><b>아직 가까이 오는 버스 없음</b></div>`;
   el.innerHTML=head+`<div class="bus-go">${go}</div>`+`<div class="bus-grid one">${cards.join("")}</div>`+btn;bindPm();
 }
-function bindPm(){const b=$("pmRefresh");if(b)b.onclick=async()=>{b.classList.add("spin");await loadPm();};}
-document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+function pmSpin(){const b=$("pmRefresh");if(b){b.classList.add("spin");b.querySelector("span").textContent="받아오는 중…";}}
+function bindPm(){const b=$("pmRefresh");if(b)b.onclick=()=>{pmSpin();loadPm(true);};}
+document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab,true));
 function busGate(){
   if(BUS_TAB==="pm")return false;
   $("sec-bus").classList.remove("bus-off");
@@ -1347,6 +1329,10 @@ function busGate(){
 }
 setTab(BUS_TAB);
 setInterval(()=>{if(document.visibilityState!=="visible")return;if(BUS_TAB==="pm")loadPm();else if(busGate())refreshLive();},30000);
+
+
+// 버스 카드 제목 옆 현재 시각
+(function tick(){const d=new Date(),el=$("busClock");if(el)el.textContent=`${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;setTimeout(tick,(60-d.getSeconds())*1000+50);})();
 
 // 일정
 const EVI={
