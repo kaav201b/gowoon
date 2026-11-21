@@ -1472,9 +1472,26 @@ const LAG_SEC=0; // 등교 보정 없음 (예전엔 웹앱이 옛 버전이라 2
 const LAG_PM=0;  // 하교 보정 없음
 function busMin(b,t,lag,per){if(lag==null)lag=LAG_SEC; // t: 데이터를 받은 시각(서버 time) → 지난 시간만큼 빼서 계속 줄어들게
   // 공식 도착정보(초)가 없으면 '남은 정거장 × 1정거장 시간'으로 초를 만든 뒤, 똑같이 보정을 적용 (예전엔 이 경우 보정이 빠져 있었음)
-  let sec=(b.sec!=null&&!isNaN(b.sec))?+b.sec:(b.left||0)*(per||STOP_MIN*60);
+  const P=per||STOP_MIN*60;
+  let sec=(b.sec!=null&&!isNaN(b.sec))?+b.sec:(b.left||0)*P;
   const el=t?Math.max(0,(Date.now()-Date.parse(t))/1000):0;
-  return Math.max(0,Math.floor((sec-el-lag)/60));}
+  let rem=sec-el-lag;
+  if(b.est||b.sec==null)rem=Math.max(((b.left||1)-1)*P,rem);  // 정거장 수로 계산한 버스: 아직 안 지난 정거장만큼은 남겨 둠
+  return Math.max(0,Math.floor(rem/60));}
+// 정거장 수로 계산하는 버스(공식 도착정보 없음)는 '이 정거장 수로 처음 보인 시각'부터 줄어들게
+// → 새로고침해도 같은 정거장이면 시간이 다시 늘어나지 않음
+const ANCH={};
+function anchor(j,tab){
+  const per=j.perStop||STOP_MIN*60, seen={};
+  (j.routes||[]).forEach(r=>(r.buses||[]).concat(r.next?[r.next]:[]).forEach(b=>{
+    if(b.sec!=null&&!isNaN(b.sec)&&!b.est)return;  // 공식 도착정보는 그대로 믿음
+    const k=tab+"|"+r.no+"|"+b.left;seen[k]=1;
+    if(!ANCH[k])ANCH[k]=j.time;
+    const el0=Math.max(0,(Date.parse(j.time)-Date.parse(ANCH[k]))/1000);
+    b.sec=Math.max((b.left-1)*per,b.left*per-el0);b.est=true;
+  }));
+  Object.keys(ANCH).forEach(k=>{if(k.startsWith(tab+"|")&&!seen[k])delete ANCH[k];});
+}
 function trackHTML(bs,N,t,per,lag){ // 정류장 앞 N정거장 노선 + 버스(정류장 사이에서도 움직이게)
   let h="";for(let k=N;k>=1;k--)h+=`<span class="st"></span><span class="ln"></span>`;
   const ms=bs.filter(b=>b.left>=1&&b.left<=N).map(b=>`<span class="bm" data-left="${b.left}" data-sec="${b.sec!=null&&!isNaN(b.sec)?b.sec:""}" data-t="${t||""}" data-per="${per||STOP_MIN*60}" data-lag="${lag||0}"></span>`).join("");
@@ -1561,7 +1578,7 @@ async function loadLive(){
   try{const r=await fetchT(fresh(url,LIVE_FORCE),8000);LIVE_FORCE=false;const j=await r.json();
     if(j.error&&!(j.routes||[]).length){LIVE_ERR=j.error;}
     else if(judge(j,LIVE,liveAt,liveMiss)==="keep"){liveMiss++;LIVE_STALE=true;if(liveMiss<=2)setTimeout(()=>{LIVE_FORCE=true;loadLive().then(liveStamp);},4000);}
-    else{LIVE=j;LIVE_ERR="";LIVE_STALE=false;liveMiss=0;liveAt=Date.now();
+    else{anchor(j,"am");LIVE=j;LIVE_ERR="";LIVE_STALE=false;liveMiss=0;liveAt=Date.now();
       try{localStorage.setItem("liveCache",JSON.stringify({at:liveAt,data:j}));}catch(_){}}}
   catch(e){LIVE_ERR=e&&e.message?e.message:"접속 실패";if(LIVE&&Date.now()-liveAt<18e4)LIVE_STALE=true;}
   drawLive();
@@ -1595,9 +1612,11 @@ const WALK_PM=3; // 학교 → 가락마을12,14단지 정류장 걷는 시간(�
 async function loadPm(force){
   const h=DATA.busPm, url=DATA.bus&&DATA.bus.live; if(!h||!url)return;
   try{const r=await fetchT(fresh(url+(url.includes("?")?"&":"?")+"t=pm",force),8000);const j=await r.json();
-    if(j.error&&!(j.routes||[]).length)LIVE_PM_ERR=j.error;
+    // 예전 Apps Script는 하교(t=pm)를 몰라서 등교 데이터(221번 포함)를 돌려줌 → 잘못된 정류장으로 보이므로 막음
+    if((j.routes||[]).some(r=>!h.routes.includes(r.no))){LIVE_PM=null;LIVE_PM_ERR="Apps Script가 예전 버전이에요 (배포 관리 → 연필 → 새 버전으로 배포)";}
+    else if(j.error&&!(j.routes||[]).length)LIVE_PM_ERR=j.error;
     else if(judge(j,LIVE_PM,livePmAt,pmMiss)==="keep"){pmMiss++;PM_STALE=true;if(pmMiss<=2)setTimeout(()=>loadPm(true),4000);}
-    else{LIVE_PM=j;LIVE_PM_ERR="";PM_STALE=false;pmMiss=0;livePmAt=Date.now();}}
+    else{anchor(j,"pm");LIVE_PM=j;LIVE_PM_ERR="";PM_STALE=false;pmMiss=0;livePmAt=Date.now();}}
   catch(e){LIVE_PM_ERR=e&&e.message?e.message:"접속 실패";if(LIVE_PM&&Date.now()-livePmAt<18e4)PM_STALE=true;}
   drawPm();
 }
