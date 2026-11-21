@@ -1683,7 +1683,7 @@ const FAV=/치킨|닭강정|떡볶이|피자|돈[까가]스|햄버거|버거|스
   // 저녁 6시 이후에는 다음 날 메뉴를 먼저
   const mf=(()=>{if(now.getHours()>=18){const nx=keys.find(k=>k>todayK);if(nx)return nx;}return focus;})();
   $("meal").innerHTML=keys.map(k=>{const ms=DATA.days[k].meal||[];
-    return `<div class="mday ${k===mf?"today":""}" data-k="${k}"><h3>${WD[toD(k).getDay()]}<small>${md(k)}</small>${k===mf&&k!==todayK?'<em class="nx">내일</em>':""}</h3>`+
+    return `<div class="mday ${k===mf?"today":""}" data-k="${k}"><h3>${WD[toD(k).getDay()]}<small>${md(k)}</small>${k===mf&&k!==todayK?`<em class="nx">${(()=>{const n=Math.round((toD(k)-today0)/864e5);return n===1?"내일":n===2?"모레":WD[toD(k).getDay()]+"요일";})()}</em>`:""}</h3>`+
       (ms.length?ms.map(m=>`<div class="meal"><div class="mh"><b>${m.t}</b><span>${m.cal}kcal</span></div><ul>${dishes(m.m).map(x=>`<li${FAV.test(x)?' class="fav"':""}>${esc(x)}</li>`).join("")}</ul></div>`).join("")
         :`<div class="nomeal">${isExamDay(k)?"수능 날, 급식 없어":"급식 없는 날"}</div>`)+"</div>";}).join("");
   const t=$("meal").querySelector(`[data-k="${mf}"]`);
