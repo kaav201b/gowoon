@@ -5,6 +5,7 @@ index.html 안의 DATA 블록만 바꿉니다. 수행평가(pa)와 평가계획 
 인증키는 저장소 Secrets의 NEIS_KEY에서 읽습니다.
 """
 import json
+import time
 import os
 import re
 import sys
@@ -40,8 +41,9 @@ def call(service, **params):
             with urllib.request.urlopen(url, timeout=30) as r:
                 data = json.loads(r.read().decode("utf-8"))
             break
-        except Exception as e:  # 네트워크 오류는 재시도
+        except Exception as e:  # 네트워크 오류는 잠깐 쉬었다가 재시도
             last = e
+            time.sleep(5)
     else:
         raise RuntimeError(f"{service} 요청 실패: {last}")
     if "RESULT" in data:  # 데이터 없음(INFO-200) 또는 오류
