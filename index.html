@@ -1466,8 +1466,8 @@ renderBus(); setInterval(renderBus,30000);
 // 실시간 버스 위치 (Google Apps Script 중계)
 var LIVE=null, liveAt=0, LIVE_ERR="";
 // 남은 분: 공식 도착정보(초)가 있으면 그것, 없으면 정거장 × 1.5분 추정
-const LAG_SEC=120; // 등교 보정: 실제로 약 2분 일찍 와서 2분 일찍으로 계산
-const LAG_PM=120; // 하교 보정: 실제로 약 2분 일찍 와서 2분 일찍으로 계산 (순환 노선 202번은 위치로만 계산하는 경우가 많아 오차가 큼)
+const LAG_SEC=0; // 등교 보정 없음 (예전엔 웹앱이 옛 버전이라 2분 보정을 넣었었음)
+const LAG_PM=0;  // 하교 보정 없음
 function busMin(b,t,lag,per){if(lag==null)lag=LAG_SEC; // t: 데이터를 받은 시각(서버 time) → 지난 시간만큼 빼서 계속 줄어들게
   // 공식 도착정보(초)가 없으면 '남은 정거장 × 1정거장 시간'으로 초를 만든 뒤, 똑같이 보정을 적용 (예전엔 이 경우 보정이 빠져 있었음)
   let sec=(b.sec!=null&&!isNaN(b.sec))?+b.sec:(b.left||0)*(per||STOP_MIN*60);
