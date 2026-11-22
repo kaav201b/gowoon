@@ -147,6 +147,7 @@ h2{font-size:18px}
 .live{margin-top:0}
 .live:empty{display:none}
 .track{display:flex;align-items:center;gap:0;padding:4px 0;position:relative}
+.bc-s em.turn{display:block;font-style:normal;font-size:11px;font-weight:700;color:#e67700;margin-top:2px}
 .track .bm{position:absolute;top:50%;left:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px #fff,0 0 0 5px rgba(0,0,0,.08);opacity:0}
 .track .bm.on{opacity:1;transition:left 1s linear}
 .track .st{width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid #c4cad1;flex:none;position:relative}
@@ -508,7 +509,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-22",
+ "updated": "2026-11-21",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -1113,7 +1114,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-22",
+  "updated": "2026-11-21",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -1146,8 +1147,16 @@ const DATA = {
   }
  },
  "weather": {
-  "20261122": {
+  "20261121": {
    "min": -4,
+   "max": 4,
+   "am": -4,
+   "sky": "1",
+   "pty": "2",
+   "pop": 60
+  },
+  "20261122": {
+   "min": -5,
    "max": 6,
    "am": -4,
    "sky": "1",
@@ -1157,30 +1166,22 @@ const DATA = {
   "20261123": {
    "min": -1,
    "max": 12,
-   "am": 1,
-   "sky": "1",
+   "am": 0,
+   "sky": "3",
    "pty": "1",
    "pop": 60
   },
   "20261124": {
-   "min": -1,
-   "max": 4,
-   "am": -1,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
-  "20261125": {
-   "min": -3,
-   "max": 8,
+   "min": 0,
+   "max": 5,
    "am": null,
    "sky": "",
    "pty": "0",
-   "pop": 10
+   "pop": 20
   },
-  "20261126": {
-   "min": 4,
-   "max": 4,
+  "20261125": {
+   "min": -2,
+   "max": -2,
    "am": null,
    "sky": "",
    "pty": "0",
@@ -1545,7 +1546,7 @@ function drawLive(){
       cards.push(`<div class="bc ${lv}${near.left>NEAR?" far":""}"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${fmt(at)} 도착</span></div>
         <div class="bc-m">${m===0?"도착":`${m}<small>분</small>`}</div>
         ${near.left<=NEAR?trackHTML(bs,NEAR,LIVE.time,LIVE.perStop,LAG_SEC,"am|"+no):`<div class="bar"><i style="width:${Math.max(0,pct)}%"></i></div>`}
-        <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${near.far?esc(near.at||""):esc((lines[no]||[])[n-near.left]||near.at)}</span></div></div>`);
+        <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${near.far?esc(near.at||""):esc((lines[no]||[])[n-near.left]||near.at)}</span>${near.turn?`<em class="turn">회차 전 · 늦을 수 있음</em>`:""}</div></div>`);
     }else{
       cards.push(`<div class="bc none"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bar"><i style="width:0"></i></div><div class="bc-s">운행 정보 없음</div></div>`);
     }
@@ -1649,7 +1650,7 @@ function drawPm(){
     cards.push(`<div class="bc ${lv} wide"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${fmt(at)} 정류장 도착</span></div>
       <div class="bc-m">${m===0?"도착":`${m}<small>분</small>`}</div>
       ${near.left<=NEAR?trackHTML(bs,NEAR,LIVE_PM.time,LIVE_PM.perStop,LAG_PM,"pm|"+no):`<div class="bar"><i style="width:${pct}%"></i></div>`}
-      <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${near.far?esc(near.at||""):esc((h.lines[no]||[])[MAXS-near.left]||near.at)}</span></div>
+      <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${near.far?esc(near.at||""):esc((h.lines[no]||[])[MAXS-near.left]||near.at)}</span>${near.turn?`<em class="turn">회차 전 · 늦을 수 있음</em>`:""}</div>
       <div class="dests"><small>학원 근처 도착 예상</small>${arr}</div></div>`);
   });
   cands.sort((a,b)=>a.m-b.m);
