@@ -1718,7 +1718,17 @@ function busMin(b,t,per){ // t: 데이터를 받은 시각(서버 time) → 지�
 // - 회차 전 버스: 종점에 도착한 뒤 첫 출발 시각 (앞 버스가 쓴 시각은 건너뜀)
 // - 도착 예상 = 출발 시각 + 기점→정류장 정거장 수 × 1정거장 시간
 // 휴일 = 토·일요일 [가정: 공휴일은 평일 시간표로 계산]
+// 운행 중인 버스에 붙은 공식 도착 시간이 남은 정거장에 비해 너무 길면(정거장당 2.5분 + 5분 초과)
+// 그다음 버스(기점 대기 등)의 시간이 잘못 붙은 것 → 정거장 수로 다시 계산
+function sanity(j){
+  const per=j.perStop||STOP_MIN*60;
+  (j.routes||[]).forEach(r=>(r.buses||[]).concat(r.next?[r.next]:[]).forEach(b=>{
+    if(b.wait||b.turn||b.est||b.sec==null)return;
+    if(b.sec>(b.left+2)*150){b.sec=b.left*per;b.est=true;delete b.src;}
+  }));
+}
 function applySchedule(j){
+  sanity(j);
   const TT=DATA.busTT||{}, per=j.perStop||STOP_MIN*60, base=Date.parse(j.time);
   if(!base)return;
   (j.routes||[]).forEach(r=>{
@@ -1860,7 +1870,7 @@ async function loadLive(){
   try{const r=await fetchT(fresh(url,LIVE_FORCE),8000);LIVE_FORCE=false;const j=await r.json();
     if(j.error&&!(j.routes||[]).length){LIVE_ERR=j.error;}
     else if(judge(j,LIVE,liveAt,liveMiss)==="keep"){liveMiss++;LIVE_STALE=true;if(liveMiss<=2)setTimeout(()=>{LIVE_FORCE=true;loadLive().then(liveStamp);},4000);}
-    else{anchor(j,"am");applySchedule(j);LIVE=j;LIVE_ERR="";LIVE_STALE=false;liveMiss=0;liveAt=Date.now();
+    else{sanity(j);anchor(j,"am");applySchedule(j);LIVE=j;LIVE_ERR="";LIVE_STALE=false;liveMiss=0;liveAt=Date.now();
       try{localStorage.setItem("liveCache",JSON.stringify({at:liveAt,data:j}));}catch(_){}}}
   catch(e){LIVE_ERR=e&&e.message?e.message:"접속 실패";if(LIVE&&Date.now()-liveAt<18e4)LIVE_STALE=true;}
   drawLive();
@@ -1898,7 +1908,7 @@ async function loadPm(force){
     if((j.routes||[]).some(r=>!h.routes.includes(r.no))){LIVE_PM=null;LIVE_PM_ERR="Apps Script가 예전 버전이에요 (배포 관리 → 연필 → 새 버전으로 배포)";}
     else if(j.error&&!(j.routes||[]).length)LIVE_PM_ERR=j.error;
     else if(judge(j,LIVE_PM,livePmAt,pmMiss)==="keep"){pmMiss++;PM_STALE=true;if(pmMiss<=2)setTimeout(()=>loadPm(true),4000);}
-    else{anchor(j,"pm");applySchedule(j);LIVE_PM=j;LIVE_PM_ERR="";PM_STALE=false;pmMiss=0;livePmAt=Date.now();}}
+    else{sanity(j);anchor(j,"pm");applySchedule(j);LIVE_PM=j;LIVE_PM_ERR="";PM_STALE=false;pmMiss=0;livePmAt=Date.now();}}
   catch(e){LIVE_PM_ERR=e&&e.message?e.message:"접속 실패";if(LIVE_PM&&Date.now()-livePmAt<18e4)PM_STALE=true;}
   drawPm();
 }
