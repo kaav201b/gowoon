@@ -511,7 +511,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-22",
+ "updated": "2026-11-21",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -1116,7 +1116,7 @@ const DATA = {
     "order": 2
    }
   ],
-  "updated": "2026-11-22",
+  "updated": "2026-11-21",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -1149,8 +1149,16 @@ const DATA = {
   }
  },
  "weather": {
-  "20261122": {
+  "20261121": {
    "min": -4,
+   "max": 4,
+   "am": -4,
+   "sky": "1",
+   "pty": "2",
+   "pop": 60
+  },
+  "20261122": {
+   "min": -5,
    "max": 6,
    "am": -4,
    "sky": "1",
@@ -1160,30 +1168,22 @@ const DATA = {
   "20261123": {
    "min": -1,
    "max": 12,
-   "am": 1,
-   "sky": "1",
+   "am": 0,
+   "sky": "3",
    "pty": "1",
    "pop": 60
   },
   "20261124": {
-   "min": -1,
-   "max": 4,
-   "am": -1,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
-  "20261125": {
-   "min": -3,
-   "max": 8,
+   "min": 0,
+   "max": 5,
    "am": null,
    "sky": "",
    "pty": "0",
-   "pop": 10
+   "pop": 20
   },
-  "20261126": {
-   "min": 4,
-   "max": 4,
+  "20261125": {
+   "min": -2,
+   "max": -2,
    "am": null,
    "sky": "",
    "pty": "0",
@@ -1742,7 +1742,10 @@ function applySchedule(j){
       const ready=b.wait?base-18e4:base+Math.max(0,b.left-tt.term)*per*1000;
       const slot=slots.find(t=>t>=ready&&t>last+6e4);if(!slot)return;
       last=slot;b.dep=slot;b.sched=true;
-      b.sec=Math.round(Math.max(0,(slot-base)/1000)+Math.min(b.left,tt.term)*per);
+      // 실측이 쌓이면(Apps Script 수집) 기점→정류장 실제 이동 시간과 평균 출발 지연을 사용
+      const T=(j.term||{})[r.no], learned=T&&T.cover>=0.6;
+      const travel=learned?T.sec:Math.min(b.left,tt.term)*per, delay=T&&T.delay>0?T.delay:0;
+      b.sec=Math.round(Math.max(0,(slot-base)/1000+delay)+travel);
     });
   });
 }
