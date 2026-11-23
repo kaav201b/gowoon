@@ -511,7 +511,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-24",
+ "updated": "2026-11-21",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -1097,20 +1097,26 @@ const DATA = {
   "routes": [
    {
     "no": "202",
-    "ok": false
+    "ok": true,
+    "first": "06:00",
+    "last": "22:30",
+    "gap": "",
+    "gapSat": "",
+    "gapSun": "",
+    "order": 8
    },
    {
     "no": "221",
     "ok": true,
-    "first": "",
-    "last": "",
+    "first": "06:05",
+    "last": "23:00",
     "gap": "",
     "gapSat": "",
     "gapSun": "",
     "order": 2
    }
   ],
-  "updated": "2026-11-24",
+  "updated": "2026-11-21",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -1143,41 +1149,41 @@ const DATA = {
   }
  },
  "weather": {
-  "20261124": {
-   "min": -3,
-   "max": 4,
-   "am": 1,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
-  "20261125": {
+  "20261121": {
    "min": -4,
-   "max": 8,
+   "max": 4,
+   "am": -4,
+   "sky": "1",
+   "pty": "2",
+   "pop": 60
+  },
+  "20261122": {
+   "min": -5,
+   "max": 6,
    "am": -4,
    "sky": "1",
    "pty": "0",
-   "pop": 20
+   "pop": 0
   },
-  "20261126": {
-   "min": 2,
-   "max": 15,
-   "am": 2,
-   "sky": "1",
-   "pty": "0",
-   "pop": 20
+  "20261123": {
+   "min": -1,
+   "max": 12,
+   "am": 0,
+   "sky": "3",
+   "pty": "1",
+   "pop": 60
   },
-  "20261127": {
-   "min": 8,
-   "max": 17,
+  "20261124": {
+   "min": 0,
+   "max": 5,
    "am": null,
    "sky": "",
    "pty": "0",
-   "pop": 0
+   "pop": 20
   },
-  "20261128": {
-   "min": 9,
-   "max": 9,
+  "20261125": {
+   "min": -2,
+   "max": -2,
    "am": null,
    "sky": "",
    "pty": "0",
@@ -1847,7 +1853,7 @@ function drawLive(){
 function fresh(u,f){return u+(u.includes("?")?"&":"?")+(f?"f=1&":"")+"_="+Date.now();}
 function fetchT(url,ms){return Promise.race([fetch(url,{cache:"no-store"}),new Promise((_,rej)=>setTimeout(()=>rej(Object.assign(new Error("응답이 늦어"),{name:"Timeout"})),ms))]);}
 // 마지막 결과를 휴대폰에 저장해 두고, 열자마자 먼저 보여줌 (3분 이내 것만)
-try{const c=JSON.parse(localStorage.getItem("liveCache")||"null");if(c&&Date.now()-c.at<18e4){LIVE=c.data;liveAt=c.at;}}catch(_){}
+try{const c=JSON.parse(localStorage.getItem("liveCache")||"null");if(c&&Date.now()-c.at<6e5){LIVE=c.data;liveAt=c.at;LIVE_STALE=Date.now()-c.at>6e4;}}catch(_){}
 var LIVE_FORCE=false;
 // 새 응답을 믿을지 판단: 오류가 섞였거나, 방금까지 오던 버스가 갑자기 전부 사라지면 '일시 오류'로 보고
 // 직전 정보(3분 이내)를 유지한 채 잠시 후 한 번 더 받아옴
@@ -1861,15 +1867,19 @@ function judge(j,prev,prevAt,miss){
   }
   return "use";
 }
-var liveMiss=0, LIVE_STALE=false;
+var liveMiss=0, LIVE_STALE=false, liveTry=0, pmTry=0;
 async function loadLive(){
   const url=DATA.bus&&DATA.bus.live; if(!url)return;
-  try{const r=await fetchT(fresh(url,LIVE_FORCE),8000);LIVE_FORCE=false;const j=await r.json();
+  try{const r=await fetchT(fresh(url,LIVE_FORCE),15000);LIVE_FORCE=false;const j=await r.json();
     if(j.error&&!(j.routes||[]).length){LIVE_ERR=j.error;}
     else if(judge(j,LIVE,liveAt,liveMiss)==="keep"){liveMiss++;LIVE_STALE=true;if(liveMiss<=2)setTimeout(()=>{LIVE_FORCE=true;loadLive().then(liveStamp);},4000);}
     else{sanity(j);anchor(j,"am");applySchedule(j);LIVE=j;LIVE_ERR="";LIVE_STALE=false;liveMiss=0;liveAt=Date.now();
       try{localStorage.setItem("liveCache",JSON.stringify({at:liveAt,data:j}));}catch(_){}}}
-  catch(e){LIVE_ERR=e&&e.message?e.message:"접속 실패";if(LIVE&&Date.now()-liveAt<18e4)LIVE_STALE=true;}
+  catch(e){
+    if(LIVE&&Date.now()-liveAt<6e5)LIVE_STALE=true;           // 10분 안의 정보가 있으면 그걸 계속 보여줌
+    else if(liveTry<2){liveTry++;LIVE_ERR="";setTimeout(()=>{LIVE_FORCE=true;loadLive().then(liveStamp);},2500);drawLive();return;}
+    LIVE_ERR=e&&e.message?e.message:"접속 실패";}
+  if(LIVE)liveTry=0;
   drawLive();
 }
 function hms(d){return `${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}:${String(d.getSeconds()).padStart(2,"0")}`;}
@@ -1897,16 +1907,22 @@ function setTab(t,force){BUS_TAB=t;
 }
 // 하교 버스 (학교 → 학원)
 var LIVE_PM=null, LIVE_PM_ERR="", livePmAt=0, pmMiss=0, PM_STALE=false;
+try{const c=JSON.parse(localStorage.getItem("livePmCache")||"null");if(c&&Date.now()-c.at<6e5){LIVE_PM=c.data;livePmAt=c.at;PM_STALE=Date.now()-c.at>6e4;}}catch(_){}
 const WALK_PM=3; // 학교 → 가락마을12,14단지 정류장 걷는 시간(분) [가정]
 async function loadPm(force){
   const h=DATA.busPm, url=DATA.bus&&DATA.bus.live; if(!h||!url)return;
-  try{const r=await fetchT(fresh(url+(url.includes("?")?"&":"?")+"t=pm",force),8000);const j=await r.json();
+  try{const r=await fetchT(fresh(url+(url.includes("?")?"&":"?")+"t=pm",force),15000);const j=await r.json();
     // 예전 Apps Script는 하교(t=pm)를 몰라서 등교 데이터(221번 포함)를 돌려줌 → 잘못된 정류장으로 보이므로 막음
     if((j.routes||[]).some(r=>!h.routes.includes(r.no))){LIVE_PM=null;LIVE_PM_ERR="Apps Script가 예전 버전이에요 (배포 관리 → 연필 → 새 버전으로 배포)";}
     else if(j.error&&!(j.routes||[]).length)LIVE_PM_ERR=j.error;
     else if(judge(j,LIVE_PM,livePmAt,pmMiss)==="keep"){pmMiss++;PM_STALE=true;if(pmMiss<=2)setTimeout(()=>loadPm(true),4000);}
-    else{sanity(j);anchor(j,"pm");applySchedule(j);LIVE_PM=j;LIVE_PM_ERR="";PM_STALE=false;pmMiss=0;livePmAt=Date.now();}}
-  catch(e){LIVE_PM_ERR=e&&e.message?e.message:"접속 실패";if(LIVE_PM&&Date.now()-livePmAt<18e4)PM_STALE=true;}
+    else{sanity(j);anchor(j,"pm");applySchedule(j);LIVE_PM=j;LIVE_PM_ERR="";PM_STALE=false;pmMiss=0;livePmAt=Date.now();
+      try{localStorage.setItem("livePmCache",JSON.stringify({at:livePmAt,data:j}));}catch(_){}}}
+  catch(e){
+    if(LIVE_PM&&Date.now()-livePmAt<6e5)PM_STALE=true;
+    else if(pmTry<2){pmTry++;LIVE_PM_ERR="";setTimeout(()=>loadPm(true),2500);drawPm();return;}
+    LIVE_PM_ERR=e&&e.message?e.message:"접속 실패";}
+  if(LIVE_PM)pmTry=0;
   drawPm();
 }
 function drawPm(){
