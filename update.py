@@ -88,9 +88,14 @@ def build_days(days):
     return out
 
 
+HOLIDAYS = []
+
+
 def build_events(old_events, today, first_day):
     keep = [e for e in old_events if e.get("src") != "나이스" and e.get("to", e["from"]) >= ymd(today)]
     rows = call("SchoolSchedule", AA_FROM_YMD=ymd(first_day), AA_TO_YMD=ymd(first_day + timedelta(days=90)))
+    # 공휴일 날짜는 버스 휴일 시간표용으로 따로 모아 둠
+    HOLIDAYS[:] = sorted({r["AA_YMD"] for r in rows if r.get("SBTR_DD_SC_NM") == "공휴일"})
     rows = [r for r in rows if r["EVENT_NM"] != "토요휴업일" and r.get("SBTR_DD_SC_NM") != "공휴일"]
     rows.sort(key=lambda r: r["AA_YMD"])
 
@@ -253,6 +258,7 @@ def main():
 
     data["days"] = build_days(days)
     data["events"] = build_events(data.get("events", []), today, days[0])
+    data["holidays"] = HOLIDAYS  # 공휴일(버스 휴일 시간표 적용)
     data["updated"] = today.strftime("%Y-%m-%d")
     data["ttPartial"] = False
 

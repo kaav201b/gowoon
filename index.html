@@ -148,6 +148,9 @@ h2{font-size:18px}
 .live:empty{display:none}
 .track{display:flex;align-items:center;gap:0;padding:4px 0;position:relative}
 .bc.wait .bc-m{color:var(--muted)}
+.bus-tt{display:flex;flex-direction:column;gap:3px;margin-top:10px;padding:9px 12px;border-radius:12px;background:var(--fill);font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.bus-tt small{font-size:11px;color:var(--muted);font-weight:700}
+.bus-tt b{display:inline-block;min-width:30px;color:var(--ink)}
 .bc.wait .track{color:#adb5bd}
 .bc-s em.turn{display:block;font-style:normal;font-size:11px;font-weight:700;color:#e67700;margin-top:2px}
 .track .bm{position:absolute;top:50%;left:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px #fff,0 0 0 5px rgba(0,0,0,.08);opacity:0}
@@ -468,6 +471,7 @@ html,body{overscroll-behavior-y:contain}
     <div class="bus-offmsg" id="busOff"></div>
     <div class="bus-go" id="busGo"></div>
     <div class="bus-grid" id="busGrid"></div>
+    <div id="busTT"></div>
     <div class="bus-list" id="busList" hidden></div>
     <button type="button" class="bus-btn" id="busRefresh"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg><span id="busRefreshTxt">새로고침</span></button>
   </section>
@@ -511,7 +515,7 @@ html,body{overscroll-behavior-y:contain}
 <script>
 /* ===== DATA START ===== */
 const DATA = {
- "updated": "2026-11-24",
+ "updated": "2026-11-21",
  "grade": 1,
  "cls": 1,
  "ttPartial": false,
@@ -1097,14 +1101,26 @@ const DATA = {
   "routes": [
    {
     "no": "202",
-    "ok": false
+    "ok": true,
+    "first": "06:00",
+    "last": "22:30",
+    "gap": "",
+    "gapSat": "",
+    "gapSun": "",
+    "order": 8
    },
    {
     "no": "221",
-    "ok": false
+    "ok": true,
+    "first": "06:05",
+    "last": "23:00",
+    "gap": "",
+    "gapSat": "",
+    "gapSun": "",
+    "order": 2
    }
   ],
-  "updated": "2026-11-24",
+  "updated": "2026-11-21",
   "link": "https://map.kakao.com/?busStopId=BS254499",
   "mlink": "https://m.map.kakao.com/actions/busStationInfo?busStopId=BS254499",
   "gaps": {
@@ -1137,41 +1153,41 @@ const DATA = {
   }
  },
  "weather": {
-  "20261124": {
-   "min": -3,
-   "max": 4,
-   "am": 1,
-   "sky": "4",
-   "pty": "0",
-   "pop": 30
-  },
-  "20261125": {
+  "20261121": {
    "min": -4,
-   "max": 8,
+   "max": 4,
+   "am": -4,
+   "sky": "1",
+   "pty": "2",
+   "pop": 60
+  },
+  "20261122": {
+   "min": -5,
+   "max": 6,
    "am": -4,
    "sky": "1",
    "pty": "0",
-   "pop": 20
+   "pop": 0
   },
-  "20261126": {
-   "min": 2,
-   "max": 15,
-   "am": 2,
-   "sky": "1",
-   "pty": "0",
-   "pop": 20
+  "20261123": {
+   "min": -1,
+   "max": 12,
+   "am": 0,
+   "sky": "3",
+   "pty": "1",
+   "pop": 60
   },
-  "20261127": {
-   "min": 8,
-   "max": 17,
+  "20261124": {
+   "min": 0,
+   "max": 5,
    "am": null,
    "sky": "",
    "pty": "0",
-   "pop": 0
+   "pop": 20
   },
-  "20261128": {
-   "min": 9,
-   "max": 9,
+  "20261125": {
+   "min": -2,
+   "max": -2,
    "am": null,
    "sky": "",
    "pty": "0",
@@ -1478,7 +1494,8 @@ const DATA = {
     "22:00",
     "22:15",
     "22:30"
-   ]
+   ],
+   "from": "정부세종청사 남측"
   },
   "221": {
    "term": 2,
@@ -1591,9 +1608,11 @@ const DATA = {
     "22:20",
     "22:45",
     "23:05"
-   ]
+   ],
+   "from": "세종누리학교"
   }
- }
+ },
+ "holidays": []
 };
 /* ===== DATA END ===== */
 
@@ -1706,6 +1725,47 @@ function busMin(b,t,per){ // t: 데이터를 받은 시각(서버 time) → 지�
 // - 회차 전 버스: 종점에 도착한 뒤 첫 출발 시각 (앞 버스가 쓴 시각은 건너뜀)
 // - 도착 예상 = 출발 시각 + 기점→정류장 정거장 수 × 1정거장 시간
 // 휴일 = 토·일요일 [가정: 공휴일은 평일 시간표로 계산]
+// ── 시간표 ──
+// Apps Script가 보내 준 시간표를 우선 쓰고(한 곳만 고치면 되게), 없으면 페이지에 저장된 것을 씀
+// 휴일 시간표: 토·일 + 공휴일(나이스 학사일정의 '공휴일' / Apps Script의 구글 캘린더 확인)
+function ttOf(no,j){return (j&&j.tt&&j.tt[no])||(DATA.busTT||{})[no]||null;}
+function isHolDay(d,j){
+  if(d.getDay()===0||d.getDay()===6)return true;
+  if((DATA.holidays||[]).includes(ymd(d)))return true;
+  return !!(j&&j.holiday&&j.time&&ymd(new Date(Date.parse(j.time)))===ymd(d));
+}
+function slotsOf(no,j,d){
+  const t=ttOf(no,j);if(!t)return null;
+  const list=(isHolDay(d,j)?t.hol:t.wk).map(x=>{const [h,m]=x.split(":").map(Number);const z=new Date(d);z.setHours(h,m,0,0);return z.getTime();});
+  return {t,list};
+}
+function hm2(ms){const d=new Date(ms);return `${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;}
+// 다음 출발 3편 (1분 지난 것까지 포함)
+function nextDeps(no,j,n){const now=Date.now(),S=slotsOf(no,j,new Date(now));return S?S.list.filter(t=>t>=now-6e4).slice(0,n||3):[];}
+// 버스 정보가 없을 때: 첫차 전 / 운행 끝 / 그 밖
+function noBusText(no,j){
+  const now=Date.now(),S=slotsOf(no,j,new Date(now));if(!S||!S.list.length)return "운행 정보 없음";
+  if(now<S.list[0]-6e5)return `첫차 ${hm2(S.list[0])} 출발`;
+  if(now>S.list[S.list.length-1]+24e5)return `오늘 운행 끝 · 첫차 ${S.t.wk[0]}`;
+  return "운행 정보 없음";
+}
+// 아래쪽 '다음 출발' 줄
+function ttRow(nos,j){
+  const rows=nos.map(no=>{const t=ttOf(no,j),L=nextDeps(no,j,3);return t&&L.length?`<span><b>${esc(no)}</b> ${esc(t.from)} ${L.map(hm2).join(" · ")}</span>`:"";}).filter(Boolean);
+  return rows.length?`<div class="bus-tt"><small>시간표 출발</small>${rows.join("")}</div>`:"";
+}
+// 실시간이 안 될 때 시간표로 대신 보여주는 카드
+function ttCards(nos,j,wide){
+  const now=Date.now(),cs=[],cands=[];
+  nos.forEach(no=>{
+    const t=ttOf(no,j),L=nextDeps(no,j,1);
+    if(!t||!L.length){cs.push(`<div class="bc none${wide?" wide":""}"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bc-s">${esc(noBusText(no,j))}</div></div>`);return;}
+    const arr=Math.max(L[0],now)+t.term*STOP_MIN*6e4, m=Math.max(0,Math.floor((arr-now)/6e4));
+    cands.push({no,m,at:new Date(arr)});
+    cs.push(`<div class="bc wait${wide?" wide":""}"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${hm2(arr)} 도착 예상</span></div><div class="bc-m">${m}<small>분</small></div><div class="bar"><i style="width:0"></i></div><div class="bc-s">시간표 기준<span>${esc(t.from)} ${hm2(L[0])} 출발</span></div></div>`);
+  });
+  return {cs,cands};
+}
 // 운행 중인 버스에 붙은 공식 도착 시간이 남은 정거장에 비해 너무 길면(정거장당 2.5분 + 5분 초과)
 // 그다음 버스(기점 대기 등)의 시간이 잘못 붙은 것 → 정거장 수로 다시 계산
 function sanity(j){
@@ -1717,12 +1777,11 @@ function sanity(j){
 }
 function applySchedule(j){
   sanity(j);
-  const TT=DATA.busTT||{}, per=j.perStop||STOP_MIN*60, base=Date.parse(j.time);
+  const per=j.perStop||STOP_MIN*60, base=Date.parse(j.time);
   if(!base)return;
   (j.routes||[]).forEach(r=>{
-    const tt=TT[r.no];if(!tt)return;
-    const d=new Date(base), hol=d.getDay()===0||d.getDay()===6;
-    const slots=(hol?tt.hol:tt.wk).map(x=>{const [h,m]=x.split(":").map(Number);const t=new Date(d);t.setHours(h,m,0,0);return t.getTime();});
+    const S=slotsOf(r.no,j,new Date(base));if(!S)return;
+    const tt=S.t, slots=S.list;
     const list=(r.buses||[]).concat(r.next?[r.next]:[]).filter(b=>b.wait||b.turn)
       .sort((a,b)=>(a.wait?0:1)-(b.wait?0:1)||a.left-b.left);
     let last=-Infinity;
@@ -1793,8 +1852,13 @@ function drawLive(){
   const lines=(DATA.bus&&DATA.bus.lines)||{}, MAXS=8, NEAR=5, routes=(DATA.bus&&DATA.bus.routes||[]).map(r=>r.no);
   const fmt=d=>`${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;
   if(!LIVE){
-    $("busGo").innerHTML=(DATA.bus&&DATA.bus.live)?`<div class="go gray"><b>${LIVE_ERR?"실시간 연결 안 됨":"불러오는 중…"}</b>${LIVE_ERR?`<span>${esc(LIVE_ERR)}</span>`:""}</div>`:"";
-    $("busGrid").innerHTML="";return;
+    if(LIVE_ERR){  // 실시간이 안 되면 시간표로 대신
+      const T=ttCards(routes,null,false);
+      $("busGo").innerHTML=`<div class="go gray"><b>실시간 연결 안 됨 · 시간표 기준</b></div>`;
+      $("busGrid").innerHTML=T.cs.join("");$("busTT").innerHTML=ttRow(routes,null);return;
+    }
+    $("busGo").innerHTML=(DATA.bus&&DATA.bus.live)?`<div class="go gray"><b>불러오는 중…</b></div>`:"";
+    $("busGrid").innerHTML="";$("busTT").innerHTML=ttRow(routes,null);return;
   }
   const now=Date.now(), cards=[], cands=[], waits=[];
   routes.forEach(no=>{
@@ -1818,7 +1882,7 @@ function drawLive(){
         ${near.left<=NEAR?trackHTML(no==="221"?bs.slice(0,2):[near],NEAR,LIVE.time,LIVE.perStop,"am|"+no):`<div class="bar"><i style="width:${Math.max(0,pct)}%"></i></div>`}
         <div class="bc-s">${near.left===0?"정류장에 있음":`${near.left}정거장 전`}<span>${near.far?esc(near.at||""):esc((lines[no]||[])[n-near.left]||near.at)}</span>${near.sched?`<em class="turn">${near.wait?"기점":"회차 후"} ${near.dep<=Date.now()?`곧 출발 (시간표 ${fmt(new Date(near.dep))})`:`${fmt(new Date(near.dep))} 출발 예정`}</em>`:""}</div></div>`);
     }else{
-      cards.push(`<div class="bc none"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bar"><i style="width:0"></i></div><div class="bc-s">운행 정보 없음</div></div>`);
+      cards.push(`<div class="bc none"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bar"><i style="width:0"></i></div><div class="bc-s">${esc(noBusText(no,LIVE))}</div></div>`);
     }
   });
   // 행동 안내: 걸어서 탈 수 있는 가장 빠른 버스
@@ -1835,6 +1899,7 @@ function drawLive(){
   else go=`<div class="go gray"><em>대기</em><b>아직 가까이 오는 버스 없음</b></div>`;
   $("busGo").innerHTML=go;
   $("busGrid").innerHTML=cards.join("");placeBuses();
+  $("busTT").innerHTML=ttRow(routes,LIVE);
 }
 // 시간 제한 있는 fetch (AbortSignal 없이 — 일부 미리보기 환경에서 signal을 넘기면 오류)
 // 매번 주소 끝에 시각을 붙여 휴대폰·통신사 캐시가 옛 응답을 돌려주지 못하게 함
@@ -1919,7 +1984,10 @@ function drawPm(){
   const fmt=d=>`${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`, now=Date.now(), nowS=fmt(new Date(now));
   const head=`<div class="bus-path"><b>${esc(h.from)}</b><span class="arr">→</span><b>${h.to.map(t=>esc(t.n)).join(" / ")}</b></div>`;
   const btn=`<button type="button" class="bus-btn" id="pmRefresh"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg><span>새로고침${livePmAt?` <small>${hms(new Date(LIVE_PM&&LIVE_PM.time?Date.parse(LIVE_PM.time):livePmAt))} 기준${PM_STALE?" · 연결 다시 시도 중":""}</small>`:""}</span></button>`;
-  if(!LIVE_PM){el.innerHTML=head+`<div class="bus-go"><div class="go gray"><em>${LIVE_PM_ERR?"연결 안 됨":"대기"}</em><b>${LIVE_PM_ERR?"실시간 연결 안 됨":"불러오는 중…"}</b><span class="now">${esc(LIVE_PM_ERR||"")}</span></div></div>`+btn;bindPm();return;}
+  if(!LIVE_PM){
+    if(LIVE_PM_ERR){const T=ttCards(h.routes,null,true);
+      el.innerHTML=head+`<div class="bus-go"><div class="go gray"><b>실시간 연결 안 됨 · 시간표 기준</b></div></div><div class="bus-grid one">${T.cs.join("")}</div>`+ttRow(h.routes,null)+btn;bindPm();return;}
+    el.innerHTML=head+`<div class="bus-go"><div class="go gray"><b>불러오는 중…</b></div></div>`+ttRow(h.routes,null)+btn;bindPm();return;}
   const MAXS=8, NEAR=5, cands=[], cards=[], waits=[];
   h.routes.forEach(no=>{
     const r=(LIVE_PM.routes||[]).find(x=>x.no===no), bs=(r?r.buses:[]).filter(b=>b.left<=MAXS).sort((a,b)=>a.left-b.left), near=bs[0]||(r&&r.next?Object.assign({at:""},r.next,{far:true}):null);
@@ -1928,7 +1996,7 @@ function drawPm(){
       cards.push(`<div class="bc wait wide"><div class="bc-h"><span class="bus-no">${esc(no)}</span><span class="bc-at">${near.wait?"출발 대기":"회차 전"}</span></div><div class="bc-m">${near.wait?"대기":"회차"}</div>
         ${near.left<=NEAR?trackHTML([near],NEAR,LIVE_PM.time,LIVE_PM.perStop,"pm|"+no):`<div class="bar"><i style="width:0"></i></div>`}
         <div class="bc-s">${near.left}정거장 전<span>${esc(near.far?(near.at||""):((h.lines[no]||[])[MAXS-near.left]||near.at))}</span><em class="turn">${near.wait?"기점에서 출발 대기 중":"종점 돌아서 출발 · 시간 미정"}</em></div></div>`);return;}
-    if(!near){cards.push(`<div class="bc none wide"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bc-s">운행 정보 없음</div></div>`);return;}
+    if(!near){cards.push(`<div class="bc none wide"><div class="bc-h"><span class="bus-no">${esc(no)}</span></div><div class="bc-m">–</div><div class="bc-s">${esc(noBusText(no,LIVE_PM))}</div></div>`);return;}
     const m=busMin(near,LIVE_PM.time,LIVE_PM.perStop), at=new Date(now+m*60000);
     cands.push({no,m,at});
     const lv=m<=5?"red":(m<=10?"amber":"green"), pct=Math.max(0,Math.round((MAXS-near.left)/MAXS*100));
@@ -1949,7 +2017,7 @@ function drawPm(){
   else if(cands.length)go=`<div class="go red"><em>이번 버스는 어려워</em><b>다음 버스를 기다려</b></div>`;
   else if(waits.length)go=`<div class="go gray"><b>${esc(waits[0])}${""} — 출발 시간 미정</b></div>`;
   else go=`<div class="go gray"><em>대기</em><b>아직 가까이 오는 버스 없음</b></div>`;
-  el.innerHTML=head+`<div class="bus-go">${go}</div>`+`<div class="bus-grid one">${cards.join("")}</div>`+btn;bindPm();placeBuses();
+  el.innerHTML=head+`<div class="bus-go">${go}</div>`+`<div class="bus-grid one">${cards.join("")}</div>`+ttRow(h.routes,LIVE_PM)+btn;bindPm();placeBuses();
 }
 function pmSpin(){const b=$("pmRefresh");if(b){b.classList.add("spin");b.querySelector("span").textContent="받아오는 중…";}}
 function bindPm(){const b=$("pmRefresh");if(b)b.onclick=()=>{pmSpin();loadPm(true);};}
